@@ -603,7 +603,7 @@
         shootTimer: 0,
         shootInterval: 90,
         hitFlash: 0,
-        label: 'GUARDIAN'
+        label: 'SHOOTING BOSS'
       };
     }
 
@@ -620,7 +620,7 @@
         chargeTimer: 0,
         chargeSpeed: 0,
         hitFlash: 0,
-        label: 'DESTROYER'
+        label: 'CHARGING BOSS'
       };
     }
 
@@ -755,7 +755,7 @@
         boss1Spawned = true;
         snd('boss');
       }
-      if (score >= 400 && !boss2Spawned && !boss && boss1Spawned) {
+      if (score >= 700 && !boss2Spawned && !boss && boss1Spawned) {
         spawnBoss2();
         boss2Spawned = true;
         snd('boss');
@@ -782,7 +782,11 @@
         // Bullet collision
         for (let j = bullets.length - 1; j >= 0; j--) {
           const b = bullets[j];
-          if (rectsOverlap({ x: b.x, y: b.y, w: 10, h: 4 }, { x: e.x, y: e.y - e.h, w: e.w, h: e.h })) {
+          const hitW = e.type === 'flyer' ? e.w + 14 : e.w;
+          const hitH = e.type === 'flyer' ? e.h + 14 : e.h;
+          const hitX = e.type === 'flyer' ? e.x - 7 : e.x;
+          const hitY = e.type === 'flyer' ? e.y - e.h - 7 : e.y - e.h;
+          if (rectsOverlap({ x: b.x, y: b.y, w: 10, h: 4 }, { x: hitX, y: hitY, w: hitW, h: hitH })) {
             e.hp--;
             bullets.splice(j, 1);
             spawnParticles(e.x + e.w / 2, e.y - e.h / 2, 4);
@@ -859,19 +863,23 @@
           } else if (b.phase === 'idle') {
             b.y = GROUND_Y - 80 + Math.sin(frameCount * 0.05) * 15;
             b.chargeTimer++;
-            if (b.chargeTimer >= 120) {
+            if (b.chargeTimer >= 60) {
               b.phase = 'charging';
-              b.chargeSpeed = 8;
+              b.chargeSpeed = 12;
+              b.targetY = player.y - player.size;
               snd('charge');
             }
           } else if (b.phase === 'charging') {
             b.x -= b.chargeSpeed;
-            b.chargeSpeed *= 0.98;
-            if (b.x < 60 || b.chargeSpeed < 1) {
+            const dy = b.targetY - b.y;
+            b.y += dy * 0.08;
+            b.chargeSpeed *= 0.99;
+            if (b.x < 40 || b.chargeSpeed < 2) {
               b.phase = 'retreating';
             }
           } else if (b.phase === 'retreating') {
-            b.x += 2;
+            b.x += 4;
+            b.y += (GROUND_Y - 80 - b.y) * 0.05;
             if (b.x >= b.homeX) {
               b.x = b.homeX;
               b.phase = 'idle';
