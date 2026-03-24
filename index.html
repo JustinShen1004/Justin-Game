@@ -31,6 +31,16 @@ WOOD='#5a4a3a',WOOD_D='#4a3a2a',WOOD_DD='#3a2a1a',WATER='#4488cc',WATER_D='#2266
 let state='menu',score=0,coins=0,hi=parseInt(localStorage.getItem('slimeHi9'))||0,frame=0,room=0,shake=0,flash=0;
 let fadeAlpha=0,fadeDir=0,fadeTarget=null,camX=0;
 let lightning=0,lightningTimer=0;
+
+// Weather system: 'clear', 'rain', 'storm'
+let weatherState='clear';
+let weatherTimer=0;
+let weatherDuration=1800; // frames until next weather change
+
+// Day/Night cycle: 0=midnight, 0.5=noon, 1=midnight
+let dayNightCycle=0.25; // start at morning
+let dayNightSpeed=0.0003; // speed of cycle
+
 const RW=canvas.width*3,RH=canvas.height-80,GY=RH-65;
 
 const P={x:100,y:GY,w:56,h:72,dh:40,dw:72,vy:0,jmp:false,duck:false,run:false,
@@ -143,8 +153,12 @@ function drawWaterDrops(){
 }
 
 function drawRain(){
-  ctx.strokeStyle='rgba(180,200,240,0.6)';
-  ctx.lineWidth=2;
+  // Only draw rain during rain or storm weather
+  if(weatherState==='clear') return;
+  
+  const rainIntensity = weatherState==='storm' ? 1.0 : 0.6;
+  ctx.strokeStyle=`rgba(180,200,240,${rainIntensity})`;
+  ctx.lineWidth=weatherState==='storm' ? 2 : 1;
   rainDrops.forEach(d=>{
     const parallax=camX*.8;
     const drawX=d.x-parallax;
@@ -170,22 +184,37 @@ function drawLightning(){
 }
 
 function drawRainFilter(){
-  ctx.fillStyle='rgba(20,25,40,0.3)';
-  ctx.fillRect(0,0,canvas.width,RH);
+  // Dark filter intensity varies by weather
+  let intensity = 0;
+  if(weatherState==='rain') intensity = 0.2;
+  else if(weatherState==='storm') intensity = 0.4;
+  
+  // Additional darkness at night
+  const nightDarkness = Math.sin(dayNightCycle * Math.PI) * 0.15; // peaks at midnight
+  intensity += nightDarkness;
+  
+  if(intensity > 0){
+    ctx.fillStyle=`rgba(20,25,40,${intensity})`;
+    ctx.fillRect(0,0,canvas.width,RH);
+  }
 }
 
 function drawLayer1(){
+  // Day/night brightness for torches (brighter at night)
+  const dayBrightness = Math.sin(dayNightCycle * Math.PI);
+  const torchBrightness = 1.3 - dayBrightness * 0.6; // torches 1.3x at night, 0.7x at noon
+  
   layer1.forEach(c=>{
     const parallax=camX*.15;
     const drawX=c.x-parallax;
     if(drawX<-80||drawX>canvas.width+80)return;
     const fl=Math.sin(frame*.1+c.flicker)*.3+.7;
-    const grad=ctx.createRadialGradient(drawX,c.y,8,drawX,c.y,60*fl);
-    grad.addColorStop(0,'rgba(255,180,80,0.7)');
-    grad.addColorStop(.3,'rgba(255,140,50,0.3)');
+    const grad=ctx.createRadialGradient(drawX,c.y,8,drawX,c.y,60*fl*torchBrightness);
+    grad.addColorStop(0,`rgba(255,180,80,${0.7*torchBrightness})`);
+    grad.addColorStop(.3,`rgba(255,140,50,${0.3*torchBrightness})`);
     grad.addColorStop(1,'transparent');
     ctx.fillStyle=grad;
-    ctx.fillRect(drawX-60,c.y-60,120,120);
+    ctx.fillRect(drawX-60*torchBrightness,c.y-60*torchBrightness,120*torchBrightness,120*torchBrightness);
     r(drawX-6,c.y,12,30,STONE_L);
     r(drawX-11,c.y-6,22,12,STONE_L);
     r(drawX-9,c.y-4,18,8,STONE);
@@ -197,23 +226,27 @@ function drawLayer1(){
     for(let i=0;i<6;i++){
       const sx=drawX+(Math.random()-.5)*fs*1.5;
       const sy=c.y-fs-8-Math.random()*18;
-      r(sx,sy,4,4,'rgba(255,200,100,0.8)');
+      r(sx,sy,4,4,`rgba(255,200,100,${0.8*torchBrightness})`);
     }
   });
 }
 
 function drawLayer2(){
+  // Day/night brightness for torches (brighter at night)
+  const dayBrightness = Math.sin(dayNightCycle * Math.PI);
+  const torchBrightness = 1.3 - dayBrightness * 0.6;
+  
   layer2.forEach(c=>{
     const parallax=camX*.35;
     const drawX=c.x-parallax;
     if(drawX<-70||drawX>canvas.width+70)return;
     const fl=Math.sin(frame*.11+c.flicker)*.25+.75;
-    const grad=ctx.createRadialGradient(drawX,c.y,10,drawX,c.y,80*fl);
-    grad.addColorStop(0,'rgba(255,160,60,0.6)');
-    grad.addColorStop(.4,'rgba(255,120,40,0.2)');
+    const grad=ctx.createRadialGradient(drawX,c.y,10,drawX,c.y,80*fl*torchBrightness);
+    grad.addColorStop(0,`rgba(255,160,60,${0.6*torchBrightness})`);
+    grad.addColorStop(.4,`rgba(255,120,40,${0.2*torchBrightness})`);
     grad.addColorStop(1,'transparent');
     ctx.fillStyle=grad;
-    ctx.fillRect(drawX-80,c.y-80,160,160);
+    ctx.fillRect(drawX-80*torchBrightness,c.y-80*torchBrightness,160*torchBrightness,160*torchBrightness);
     r(drawX-8,c.y,16,42,STONE_L);
     r(drawX-14,c.y-8,28,16,STONE_L);
     r(drawX-12,c.y-5,24,10,STONE);
@@ -225,7 +258,7 @@ function drawLayer2(){
     for(let i=0;i<7;i++){
       const sx=drawX+(Math.random()-.5)*fs*1.8;
       const sy=c.y-fs-12-Math.random()*20;
-      r(sx,sy,4,4,'rgba(255,200,100,0.7)');
+      r(sx,sy,4,4,`rgba(255,200,100,${0.7*torchBrightness})`);
     }
   });
 }
@@ -324,6 +357,9 @@ function drawLayerFront(){
 }
 
 function drawRoom(){
+  // Calculate day/night brightness (0=midnight, 0.5=noon, 1=midnight)
+  const dayBrightness = Math.sin(dayNightCycle * Math.PI); // 0 at midnight, 1 at noon
+  
   ctx.fillStyle=STONE_DDD;ctx.fillRect(0,0,canvas.width,RH);
   for(let x=-camX*.05%65;x<canvas.width+65;x+=65){
     for(let y=0;y<RH;y+=32){
@@ -347,6 +383,13 @@ function drawRoom(){
   r(0,0,canvas.width,4,'#2a2a3a');
   r(0,0,4,RH,'#2a2a3a');
   r(canvas.width-4,0,4,RH,'#2a2a3a');
+  
+  // Night overlay (darker at night)
+  const nightIntensity = (1 - dayBrightness) * 0.25;
+  if(nightIntensity > 0){
+    ctx.fillStyle=`rgba(10,10,30,${nightIntensity})`;
+    ctx.fillRect(0,0,canvas.width,RH);
+  }
 }
 
 function drawDoor(){
@@ -673,12 +716,29 @@ function update(){
   if(P.inv>0)P.inv--;if(P.pf>0)P.pf--;if(P.scd>0)P.scd--;
   if(P.run&&!P.jmp)P.bf+=.35;
   
-  lightningTimer++;
-  if(lightningTimer>180+Math.random()*120){
-    lightning=1;
-    lightningTimer=0;
-    snd('thunder');
+  // Weather rotation: clear -> rain -> storm -> clear
+  weatherTimer++;
+  if(weatherTimer>=weatherDuration){
+    weatherTimer=0;
+    weatherDuration=1800+Math.random()*1800; // 30-60 seconds
+    if(weatherState==='clear') weatherState='rain';
+    else if(weatherState==='rain') weatherState='storm';
+    else weatherState='clear';
   }
+  
+  // Lightning only during storms
+  if(weatherState==='storm'){
+    lightningTimer++;
+    if(lightningTimer>180+Math.random()*120){
+      lightning=1;
+      lightningTimer=0;
+      snd('thunder');
+    }
+  }
+  
+  // Day/Night cycle
+  dayNightCycle+=dayNightSpeed;
+  if(dayNightCycle>=1) dayNightCycle=0;
   
   if(fadeDir!==0){
     fadeAlpha+=fadeDir;
