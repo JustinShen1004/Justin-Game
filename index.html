@@ -32,7 +32,7 @@ let state='menu',score=0,coins=0,hi=parseInt(localStorage.getItem('slimeHi9'))||
 let fadeAlpha=0,fadeDir=0,fadeTarget=null,camX=0;
 const RW=canvas.width*3,RH=canvas.height-80,GY=RH-65;
 
-const P={x:100,y:GY,w:48,h:60,dh:32,dw:60,vy:0,jmp:false,duck:false,run:false,
+const P={x:100,y:GY,w:56,h:72,dh:40,dw:72,vy:0,jmp:false,duck:false,run:false,
   hp:5,maxHp:5,mana:10,maxMana:10,inv:0,pf:0,scd:0,face:1,jumps:0,maxJumps:2,bf:0};
 
 let boss=null,bossSpawned=false;
@@ -137,26 +137,26 @@ function drawLayer1(){
   layer1.forEach(c=>{
     const parallax=camX*.15;
     const drawX=c.x-parallax;
-    if(drawX<-60||drawX>canvas.width+60)return;
+    if(drawX<-80||drawX>canvas.width+80)return;
     const fl=Math.sin(frame*.1+c.flicker)*.3+.7;
-    const grad=ctx.createRadialGradient(drawX,c.y,5,drawX,c.y,40*fl);
-    grad.addColorStop(0,'rgba(255,180,80,0.6)');
-    grad.addColorStop(.4,'rgba(255,140,50,0.2)');
+    const grad=ctx.createRadialGradient(drawX,c.y,8,drawX,c.y,60*fl);
+    grad.addColorStop(0,'rgba(255,180,80,0.7)');
+    grad.addColorStop(.3,'rgba(255,140,50,0.3)');
     grad.addColorStop(1,'transparent');
     ctx.fillStyle=grad;
-    ctx.fillRect(drawX-40,c.y-40,80,80);
-    r(drawX-4,c.y,8,20,STONE_L);
-    r(drawX-7,c.y-4,14,8,STONE_L);
-    r(drawX-5,c.y-2,10,4,STONE);
-    const fs=8+Math.sin(frame*.12+c.flicker)*3;
-    r(drawX-fs/2,c.y-fs-3,fs,fs+3,TORCH);
-    r(drawX-fs/2+2,c.y-fs-1,fs-4,fs-1,TORCH_G);
-    r(drawX-3,c.y-fs-8,6,6,'#fff');
-    r(drawX-1,c.y-fs-6,2,2,'#ff8');
-    for(let i=0;i<4;i++){
-      const sx=drawX+(Math.random()-.5)*fs*1.2;
-      const sy=c.y-fs-5-Math.random()*12;
-      r(sx,sy,2,2,'rgba(255,200,100,0.8)');
+    ctx.fillRect(drawX-60,c.y-60,120,120);
+    r(drawX-6,c.y,12,30,STONE_L);
+    r(drawX-11,c.y-6,22,12,STONE_L);
+    r(drawX-9,c.y-4,18,8,STONE);
+    const fs=12+Math.sin(frame*.12+c.flicker)*4;
+    r(drawX-fs/2,c.y-fs-5,fs,fs+5,TORCH);
+    r(drawX-fs/2+3,c.y-fs-2,fs-6,fs-1,TORCH_G);
+    r(drawX-4,c.y-fs-12,8,8,'#fff');
+    r(drawX-2,c.y-fs-10,4,4,'#ff8');
+    for(let i=0;i<6;i++){
+      const sx=drawX+(Math.random()-.5)*fs*1.5;
+      const sy=c.y-fs-8-Math.random()*18;
+      r(sx,sy,4,4,'rgba(255,200,100,0.8)');
     }
   });
 }
@@ -165,26 +165,26 @@ function drawLayer2(){
   layer2.forEach(c=>{
     const parallax=camX*.35;
     const drawX=c.x-parallax;
-    if(drawX<-50||drawX>canvas.width+50)return;
+    if(drawX<-70||drawX>canvas.width+70)return;
     const fl=Math.sin(frame*.11+c.flicker)*.25+.75;
-    const grad=ctx.createRadialGradient(drawX,c.y,6,drawX,c.y,55*fl);
-    grad.addColorStop(0,'rgba(255,160,60,0.5)');
-    grad.addColorStop(.5,'rgba(255,120,40,0.15)');
+    const grad=ctx.createRadialGradient(drawX,c.y,10,drawX,c.y,80*fl);
+    grad.addColorStop(0,'rgba(255,160,60,0.6)');
+    grad.addColorStop(.4,'rgba(255,120,40,0.2)');
     grad.addColorStop(1,'transparent');
     ctx.fillStyle=grad;
-    ctx.fillRect(drawX-55,c.y-55,110,110);
-    r(drawX-5,c.y,10,28,STONE_L);
-    r(drawX-9,c.y-5,18,10,STONE_L);
-    r(drawX-7,c.y-3,14,6,STONE);
-    const fs=10+Math.sin(frame*.13+c.flicker)*3;
-    r(drawX-fs/2,c.y-fs-4,fs,fs+4,TORCH);
-    r(drawX-fs/2+2,c.y-fs-2,fs-4,fs,TORCH_G);
-    r(drawX-3,c.y-fs-9,6,6,'#fff');
-    r(drawX-1,c.y-fs-7,2,2,'#ff8');
-    for(let i=0;i<5;i++){
-      const sx=drawX+(Math.random()-.5)*fs*1.5;
-      const sy=c.y-fs-8-Math.random()*15;
-      r(sx,sy,3,3,'rgba(255,200,100,0.7)');
+    ctx.fillRect(drawX-80,c.y-80,160,160);
+    r(drawX-8,c.y,16,42,STONE_L);
+    r(drawX-14,c.y-8,28,16,STONE_L);
+    r(drawX-12,c.y-5,24,10,STONE);
+    const fs=16+Math.sin(frame*.13+c.flicker)*5;
+    r(drawX-fs/2,c.y-fs-6,fs,fs+6,TORCH);
+    r(drawX-fs/2+3,c.y-fs-3,fs-6,fs-1,TORCH_G);
+    r(drawX-5,c.y-fs-14,10,10,'#fff');
+    r(drawX-3,c.y-fs-12,6,6,'#ff8');
+    for(let i=0;i<7;i++){
+      const sx=drawX+(Math.random()-.5)*fs*1.8;
+      const sy=c.y-fs-12-Math.random()*20;
+      r(sx,sy,4,4,'rgba(255,200,100,0.7)');
     }
   });
 }
@@ -193,40 +193,40 @@ function drawLayer3(){
   layer3.forEach(o=>{
     const parallax=camX*.55;
     const drawX=o.x-parallax;
-    if(drawX<-150||drawX>canvas.width+150)return;
+    if(drawX<-200||drawX>canvas.width+200)return;
     ctx.globalAlpha=1;
     if(o.type===0){
-      r(drawX,GY-80,60,80,WOOD);
-      r(drawX+5,GY-75,50,10,WOOD_D);
-      r(drawX+3,GY-60,25,5,WOOD_DD);
-      r(drawX+35,GY-50,20,5,WOOD_DD);
-      r(drawX+8,GY-35,30,4,WOOD_D);
-      r(drawX+50,GY-95,8,95,WOOD_D);
-      r(drawX+52,GY-92,4,4,WOOD_DD);
-      r(drawX+20,GY-110,6,30,WOOD_DD);
+      r(drawX,GY-120,90,120,WOOD);
+      r(drawX+8,GY-112,74,15,WOOD_D);
+      r(drawX+5,GY-90,35,8,WOOD_DD);
+      r(drawX+50,GY-75,30,8,WOOD_DD);
+      r(drawX+12,GY-50,45,6,WOOD_D);
+      r(drawX+75,GY-140,12,140,WOOD_D);
+      r(drawX+78,GY-136,6,6,WOOD_DD);
+      r(drawX+30,GY-165,10,45,WOOD_DD);
     }else if(o.type===1){
-      r(drawX,GY-60,45,60,WOOD);
-      r(drawX-10,GY-50,20,8,WOOD_D);
-      r(drawX+35,GY-35,18,6,WOOD_D);
-      for(let i=0;i<4;i++)r(drawX+5+i*10,GY-45+i*8,8,3,WOOD_DD);
-      r(drawX+15,GY-80,5,20,WOOD_DD);
-      r(drawX+30,GY-75,4,15,WOOD_DD);
+      r(drawX,GY-90,70,90,WOOD);
+      r(drawX-15,GY-75,30,12,WOOD_D);
+      r(drawX+55,GY-55,28,10,WOOD_D);
+      for(let i=0;i<5;i++)r(drawX+8+i*12,GY-68+i*10,12,5,WOOD_DD);
+      r(drawX+25,GY-120,8,30,WOOD_DD);
+      r(drawX+45,GY-115,6,25,WOOD_DD);
     }else if(o.type===2){
-      r(drawX,GY-70,50,70,WOOD);
-      r(drawX+15,GY-90,20,20,WOOD_D);
-      r(drawX+20,GY-105,10,15,WOOD_DD);
-      r(drawX+5,GY-40,40,5,WOOD_DD);
-      r(drawX+10,GY-25,25,4,WOOD_D);
-      r(drawX+35,GY-120,6,50,WOOD_DD);
-      r(drawX+10,GY-115,4,45,WOOD_DD);
+      r(drawX,GY-105,75,105,WOOD);
+      r(drawX+22,GY-135,30,30,WOOD_D);
+      r(drawX+30,GY-158,15,23,WOOD_DD);
+      r(drawX+8,GY-60,60,8,WOOD_DD);
+      r(drawX+15,GY-38,38,6,WOOD_D);
+      r(drawX+52,GY-180,10,75,WOOD_DD);
+      r(drawX+15,GY-172,7,67,WOOD_DD);
     }else{
       for(let i=0;i<3;i++){
-        r(drawX+i*25,GY-(50-i*10),20,50-i*10,WOOD);
-        r(drawX+i*25+5,GY-(40-i*10),10,5,WOOD_DD);
+        r(drawX+i*38,GY-(75-i*15),30,75-i*15,WOOD);
+        r(drawX+i*38+8,GY-(60-i*15),15,8,WOOD_DD);
       }
-      r(drawX+10,GY-85,4,35,WOOD_DD);
-      r(drawX+35,GY-80,5,30,WOOD_DD);
-      r(drawX+55,GY-70,4,20,WOOD_DD);
+      r(drawX+15,GY-128,6,53,WOOD_DD);
+      r(drawX+52,GY-120,8,45,WOOD_DD);
+      r(drawX+82,GY-105,6,30,WOOD_DD);
     }
     ctx.globalAlpha=1;
   });
@@ -560,7 +560,7 @@ function drawWin(){
 
 function spawnSlime(isBoss){
   const x=200+Math.random()*(RW-400);
-  const s={x:x,y:GY,w:isBoss?180:55+Math.random()*18,h:isBoss?120:36+Math.random()*14,
+  const s={x:x,y:GY,w:isBoss?220:70+Math.random()*20,h:isBoss?150:45+Math.random()*15,
     hp:isBoss?30:2,mhp:isBoss?30:2,
     boss:isBoss,flash:0,chargeTimer:0,shootTimer:0,charging:false,recharging:false,shooting:false,
     dashSpeed:0,dashDir:1,moveTimer:0,moveDir:0};
@@ -572,7 +572,7 @@ function spawnSlide(){
   const side=Math.random()<.5;
   slides.push({
     x:side?-80:RW+80,y:GY,
-    w:55+Math.random()*22,h:28+Math.random()*14,
+    w:70+Math.random()*25,h:35+Math.random()*15,
     hp:2,flash:0,
     vx:(side?1:-1)*(2.5+Math.random()*1.5),
     origVx:0
@@ -584,8 +584,8 @@ function spawnSlide(){
 function spawnFlyer(){
   flyers.push({
     x:150+Math.random()*(RW-300),
-    y:GY-90-Math.random()*70,
-    w:55,h:40,hp:1,flash:0,
+    y:GY-100-Math.random()*80,
+    w:70,h:50,hp:1,flash:0,
     vx:(Math.random()<.5?1:-1)*(0.35+Math.random()*0.25),
     vy:(Math.random()<.5?1:-1)*.12
   });
