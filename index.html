@@ -30,6 +30,7 @@ WOOD='#5a4a3a',WOOD_D='#4a3a2a',WOOD_DD='#3a2a1a',WATER='#4488cc',WATER_D='#2266
 
 let state='menu',score=0,coins=0,hi=parseInt(localStorage.getItem('slimeHi9'))||0,frame=0,room=0,shake=0,flash=0;
 let fadeAlpha=0,fadeDir=0,fadeTarget=null,camX=0;
+let lightning=0,lightningTimer=0;
 const RW=canvas.width*3,RH=canvas.height-80,GY=RH-65;
 
 const P={x:100,y:GY,w:56,h:72,dh:40,dw:72,vy:0,jmp:false,duck:false,run:false,
@@ -37,7 +38,7 @@ const P={x:100,y:GY,w:56,h:72,dh:40,dw:72,vy:0,jmp:false,duck:false,run:false,
 
 let boss=null,bossSpawned=false;
 const slimes=[],slides=[],flyers=[],bul=[],bossBul=[],parts=[];
-const layer1=[],layer2=[],layer3=[],layerFront=[],waterDrops=[],mossPatches=[];
+const layer1=[],layer2=[],layer3=[],layerFront=[],waterDrops=[],mossPatches=[],rainDrops=[];
 
 const AC=new(window.AudioContext||window.webkitAudioContext)();
 function snd(t){
@@ -61,7 +62,7 @@ function r(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,h|0);}
 
 function genLayers(){
   layer1.length=0;layer2.length=0;layer3.length=0;layerFront.length=0;
-  waterDrops.length=0;mossPatches.length=0;
+  waterDrops.length=0;mossPatches.length=0;rainDrops.length=0;
   
   for(let i=0;i<20;i++){
     layer1.push({x:Math.random()*RW,y:40+Math.random()*(GY-120),flicker:Math.random()*10});
@@ -94,6 +95,14 @@ function genLayers(){
       y:30+Math.random()*(GY-80),
       w:20+Math.random()*40,
       h:10+Math.random()*20
+    });
+  }
+  for(let i=0;i<100;i++){
+    rainDrops.push({
+      x:Math.random()*RW,
+      y:Math.random()*RH,
+      speed:8+Math.random()*6,
+      length:10+Math.random()*15
     });
   }
 }
@@ -131,6 +140,33 @@ function drawWaterDrops(){
     r(drawX,d.y,2,6,WATER);
     r(drawX+1,d.y+2,1,3,WATER_D);
   });
+}
+
+function drawRain(){
+  ctx.strokeStyle='rgba(150,180,220,0.4)';
+  ctx.lineWidth=1;
+  rainDrops.forEach(d=>{
+    const parallax=camX*.8;
+    const drawX=d.x-parallax;
+    d.y+=d.speed;
+    if(d.y>RH){
+      d.y=-20;
+      d.x=Math.random()*RW;
+    }
+    if(drawX<-20||drawX>canvas.width+20)return;
+    ctx.beginPath();
+    ctx.moveTo(drawX,d.y);
+    ctx.lineTo(drawX-2,d.y+d.length);
+    ctx.stroke();
+  });
+}
+
+function drawLightning(){
+  if(lightning>0){
+    ctx.fillStyle=`rgba(255,255,255,${lightning*.3})`;
+    ctx.fillRect(0,0,canvas.width,RH);
+    lightning-=0.1;
+  }
 }
 
 function drawLayer1(){
@@ -631,6 +667,13 @@ function update(){
   if(shake>0)shake--;if(flash>0)flash--;
   if(P.inv>0)P.inv--;if(P.pf>0)P.pf--;if(P.scd>0)P.scd--;
   if(P.run&&!P.jmp)P.bf+=.35;
+  
+  lightningTimer++;
+  if(lightningTimer>180+Math.random()*120){
+    lightning=1;
+    lightningTimer=0;
+  }
+  
   if(fadeDir!==0){
     fadeAlpha+=fadeDir;
     if(fadeAlpha>=1){fadeAlpha=1;fadeDir=-1;if(fadeTarget){fadeTarget();fadeTarget=null;}}
@@ -771,6 +814,7 @@ function draw(){
   if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
   if(state==='menu'){drawMenu();ctx.restore();return;}
   drawRoom();drawDoor();drawBullets();drawBossBullets();
+  drawRain();
   slimes.forEach(s=>drawSlime(s));
   slides.forEach(e=>drawSlide(e));
   flyers.forEach(e=>drawFlyer(e));
@@ -782,6 +826,7 @@ function draw(){
   });
   ctx.globalAlpha=1;
   drawLayerFront();
+  drawLightning();
   if(flash>0){ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(0,0,canvas.width,RH);}
   ctx.restore();
   drawHUD();if(boss)drawBossHP();
