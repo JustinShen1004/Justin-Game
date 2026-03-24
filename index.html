@@ -193,40 +193,40 @@ function drawLayer3(){
   layer3.forEach(o=>{
     const parallax=camX*.55;
     const drawX=o.x-parallax;
-    if(drawX<-200||drawX>canvas.width+200)return;
+    if(drawX<-250||drawX>canvas.width+250)return;
     ctx.globalAlpha=1;
     if(o.type===0){
-      r(drawX,GY-120,90,120,WOOD);
-      r(drawX+8,GY-112,74,15,WOOD_D);
-      r(drawX+5,GY-90,35,8,WOOD_DD);
-      r(drawX+50,GY-75,30,8,WOOD_DD);
-      r(drawX+12,GY-50,45,6,WOOD_D);
-      r(drawX+75,GY-140,12,140,WOOD_D);
-      r(drawX+78,GY-136,6,6,WOOD_DD);
-      r(drawX+30,GY-165,10,45,WOOD_DD);
+      r(drawX,GY-160,120,160,WOOD);
+      r(drawX+10,GY-150,100,20,WOOD_D);
+      r(drawX+8,GY-120,50,10,WOOD_DD);
+      r(drawX+65,GY-100,45,10,WOOD_DD);
+      r(drawX+15,GY-70,60,8,WOOD_D);
+      r(drawX+100,GY-190,16,190,WOOD_D);
+      r(drawX+104,GY-185,8,8,WOOD_DD);
+      r(drawX+40,GY-220,14,60,WOOD_DD);
     }else if(o.type===1){
-      r(drawX,GY-90,70,90,WOOD);
-      r(drawX-15,GY-75,30,12,WOOD_D);
-      r(drawX+55,GY-55,28,10,WOOD_D);
-      for(let i=0;i<5;i++)r(drawX+8+i*12,GY-68+i*10,12,5,WOOD_DD);
-      r(drawX+25,GY-120,8,30,WOOD_DD);
-      r(drawX+45,GY-115,6,25,WOOD_DD);
+      r(drawX,GY-120,95,120,WOOD);
+      r(drawX-20,GY-100,40,15,WOOD_D);
+      r(drawX+75,GY-75,38,12,WOOD_D);
+      for(let i=0;i<6;i++)r(drawX+10+i*14,GY-90+i*12,15,6,WOOD_DD);
+      r(drawX+35,GY-160,10,40,WOOD_DD);
+      r(drawX+60,GY-155,8,35,WOOD_DD);
     }else if(o.type===2){
-      r(drawX,GY-105,75,105,WOOD);
-      r(drawX+22,GY-135,30,30,WOOD_D);
-      r(drawX+30,GY-158,15,23,WOOD_DD);
-      r(drawX+8,GY-60,60,8,WOOD_DD);
-      r(drawX+15,GY-38,38,6,WOOD_D);
-      r(drawX+52,GY-180,10,75,WOOD_DD);
-      r(drawX+15,GY-172,7,67,WOOD_DD);
+      r(drawX,GY-140,100,140,WOOD);
+      r(drawX+30,GY-180,40,40,WOOD_D);
+      r(drawX+40,GY-210,20,30,WOOD_DD);
+      r(drawX+10,GY-80,80,10,WOOD_DD);
+      r(drawX+20,GY-50,50,8,WOOD_D);
+      r(drawX+70,GY-240,14,100,WOOD_DD);
+      r(drawX+20,GY-230,10,90,WOOD_DD);
     }else{
       for(let i=0;i<3;i++){
-        r(drawX+i*38,GY-(75-i*15),30,75-i*15,WOOD);
-        r(drawX+i*38+8,GY-(60-i*15),15,8,WOOD_DD);
+        r(drawX+i*50,GY-(100-i*20),40,100-i*20,WOOD);
+        r(drawX+i*50+10,GY-(80-i*20),20,10,WOOD_DD);
       }
-      r(drawX+15,GY-128,6,53,WOOD_DD);
-      r(drawX+52,GY-120,8,45,WOOD_DD);
-      r(drawX+82,GY-105,6,30,WOOD_DD);
+      r(drawX+20,GY-170,8,70,WOOD_DD);
+      r(drawX+70,GY-160,10,60,WOOD_DD);
+      r(drawX+110,GY-140,8,40,WOOD_DD);
     }
     ctx.globalAlpha=1;
   });
