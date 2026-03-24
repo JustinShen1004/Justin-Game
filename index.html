@@ -70,14 +70,14 @@ function genLayers(){
     layer2.push({x:Math.random()*RW,y:60+Math.random()*(GY-140),flicker:Math.random()*10});
   }
   for(let i=0;i<25;i++){
-    layer3.push({x:Math.random()*RW,y:20+Math.random()*(GY-80),type:Math.floor(Math.random()*4)});
+    layer3.push({x:Math.random()*RW,y:GY,type:Math.floor(Math.random()*4)});
   }
-  for(let i=0;i<12;i++){
+  for(let i=0;i<10;i++){
     layerFront.push({
       x:Math.random()*RW,
-      w:80+Math.random()*120,
-      h:50+Math.random()*100,
-      type:Math.floor(Math.random()*3)
+      w:150+Math.random()*200,
+      h:120+Math.random()*180,
+      type:Math.floor(Math.random()*4)
     });
   }
   for(let i=0;i<8;i++){
@@ -196,29 +196,37 @@ function drawLayer3(){
     if(drawX<-150||drawX>canvas.width+150)return;
     ctx.globalAlpha=.35;
     if(o.type===0){
-      r(drawX,o.y,60,80,WOOD);
-      r(drawX+5,o.y+5,50,10,WOOD_D);
-      r(drawX+3,o.y+20,25,5,WOOD_DD);
-      r(drawX+35,o.y+30,20,5,WOOD_DD);
-      r(drawX+8,o.y+45,30,4,WOOD_D);
-      r(drawX+50,o.y-15,8,95,WOOD_D);
-      r(drawX+52,o.y-12,4,4,WOOD_DD);
+      r(drawX,GY-80,60,80,WOOD);
+      r(drawX+5,GY-75,50,10,WOOD_D);
+      r(drawX+3,GY-60,25,5,WOOD_DD);
+      r(drawX+35,GY-50,20,5,WOOD_DD);
+      r(drawX+8,GY-35,30,4,WOOD_D);
+      r(drawX+50,GY-95,8,95,WOOD_D);
+      r(drawX+52,GY-92,4,4,WOOD_DD);
+      r(drawX+20,GY-110,6,30,WOOD_DD);
     }else if(o.type===1){
-      r(drawX,o.y,45,60,WOOD);
-      r(drawX-10,o.y+10,20,8,WOOD_D);
-      r(drawX+35,o.y+25,18,6,WOOD_D);
-      for(let i=0;i<4;i++)r(drawX+5+i*10,o.y+15+i*8,8,3,WOOD_DD);
+      r(drawX,GY-60,45,60,WOOD);
+      r(drawX-10,GY-50,20,8,WOOD_D);
+      r(drawX+35,GY-35,18,6,WOOD_D);
+      for(let i=0;i<4;i++)r(drawX+5+i*10,GY-45+i*8,8,3,WOOD_DD);
+      r(drawX+15,GY-80,5,20,WOOD_DD);
+      r(drawX+30,GY-75,4,15,WOOD_DD);
     }else if(o.type===2){
-      r(drawX,o.y,50,70,WOOD);
-      r(drawX+15,o.y-20,20,20,WOOD_D);
-      r(drawX+20,o.y-35,10,15,WOOD_DD);
-      r(drawX+5,o.y+30,40,5,WOOD_DD);
-      r(drawX+10,o.y+45,25,4,WOOD_D);
+      r(drawX,GY-70,50,70,WOOD);
+      r(drawX+15,GY-90,20,20,WOOD_D);
+      r(drawX+20,GY-105,10,15,WOOD_DD);
+      r(drawX+5,GY-40,40,5,WOOD_DD);
+      r(drawX+10,GY-25,25,4,WOOD_D);
+      r(drawX+35,GY-120,6,50,WOOD_DD);
+      r(drawX+10,GY-115,4,45,WOOD_DD);
     }else{
       for(let i=0;i<3;i++){
-        r(drawX+i*25,o.y+i*10,20,50-i*10,WOOD);
-        r(drawX+i*25+5,o.y+i*10+10,10,5,WOOD_DD);
+        r(drawX+i*25,GY-(50-i*10),20,50-i*10,WOOD);
+        r(drawX+i*25+5,GY-(40-i*10),10,5,WOOD_DD);
       }
+      r(drawX+10,GY-85,4,35,WOOD_DD);
+      r(drawX+35,GY-80,5,30,WOOD_DD);
+      r(drawX+55,GY-70,4,20,WOOD_DD);
     }
     ctx.globalAlpha=1;
   });
@@ -228,36 +236,49 @@ function drawLayerFront(){
   layerFront.forEach(s=>{
     const parallax=camX*.85;
     const drawX=s.x-parallax;
-    if(drawX<-200||drawX>canvas.width+200)return;
+    if(drawX<-300||drawX>canvas.width+300)return;
     
     if(s.type===0){
-      ctx.globalAlpha=.18;
-      r(drawX,GY-s.h,s.w,s.h,'#0a0a14');
-      r(drawX+s.w*.15,GY-s.h-30,s.w*.7,30,'#0a0a14');
-      r(drawX+s.w*.3,GY-s.h-55,s.w*.4,25,'#0a0a14');
-      r(drawX+s.w*.35,GY-s.h-75,s.w*.3,20,'#0a0a14');
-      r(drawX+10,GY-s.h+15,8,30,'#080810');
-      r(drawX+s.w-18,GY-s.h+20,8,25,'#080810');
-      ctx.globalAlpha=.12;
-      r(drawX+s.w*.25,GY-s.h-40,6,50,'#060610');
-      r(drawX+s.w*.65,GY-s.h-35,6,45,'#060610');
+      ctx.globalAlpha=.2;
+      r(drawX,GY-s.h,s.w,s.h,'#050508');
+      r(drawX+s.w*.15,GY-s.h-40,s.w*.7,40,'#050508');
+      r(drawX+s.w*.3,GY-s.h-70,s.w*.4,30,'#050508');
+      r(drawX+s.w*.35,GY-s.h-100,s.w*.3,30,'#050508');
+      r(drawX+15,GY-s.h+20,12,40,'#040406');
+      r(drawX+s.w-27,GY-s.h+25,12,35,'#040406');
+      r(drawX+s.w*.25,GY-s.h-55,8,60,'#030305');
+      r(drawX+s.w*.65,GY-s.h-50,8,55,'#030305');
+      r(drawX+s.w*.45,GY-s.h-120,6,50,'#030305');
     }else if(s.type===1){
+      ctx.globalAlpha=.18;
+      r(drawX,GY-s.h*.6,s.w,s.h*.6,'#050508');
+      r(drawX+s.w*.1,GY-s.h,s.w*.3,s.h*.4,'#050508');
+      r(drawX+s.w*.55,GY-s.h*.85,s.w*.25,s.h*.25,'#050508');
+      r(drawX+s.w*.4,GY-s.h*.5,20,50,'#040406');
+      r(drawX+s.w*.7,GY-s.h*.4,16,45,'#040406');
+      r(drawX+s.w*.15,GY-s.h*.7,10,35,'#030305');
+      r(drawX+s.w*.5,GY-s.h*.75,8,30,'#030305');
+      r(drawX+s.w*.85,GY-s.h*.45,6,25,'#030305');
+    }else if(s.type===2){
       ctx.globalAlpha=.16;
-      r(drawX,GY-s.h*.6,s.w,s.h*.6,'#0a0a14');
-      r(drawX+s.w*.1,GY-s.h,s.w*.3,s.h*.4,'#0a0a14');
-      r(drawX+s.w*.55,GY-s.h*.85,s.w*.25,s.h*.25,'#0a0a14');
-      r(drawX+s.w*.4,GY-s.h*.5,15,40,'#080810');
-      r(drawX+s.w*.7,GY-s.h*.4,12,35,'#080810');
-      r(drawX+s.w*.15,GY-s.h*.7,8,25,'#060610');
-    }else{
-      ctx.globalAlpha=.15;
-      r(drawX,GY-s.h*.5,s.w,s.h*.5,'#0a0a14');
-      r(drawX+s.w*.2,GY-s.h*.7,s.w*.6,s.h*.2,'#0a0a14');
-      r(drawX+s.w*.35,GY-s.h*.9,s.w*.3,s.h*.2,'#0a0a14');
-      for(let i=0;i<2;i++){
-        r(drawX+s.w*(.2+i*.5),GY-s.h*.6,8,35,'#080810');
+      r(drawX,GY-s.h*.5,s.w,s.h*.5,'#050508');
+      r(drawX+s.w*.2,GY-s.h*.7,s.w*.6,s.h*.2,'#050508');
+      r(drawX+s.w*.35,GY-s.h*.9,s.w*.3,s.h*.2,'#050508');
+      for(let i=0;i<3;i++){
+        r(drawX+s.w*(.15+i*.35),GY-s.h*.6,10,45,'#040406');
       }
-      r(drawX+s.w*.4,GY-s.h*.4,6,20,'#060610');
+      r(drawX+s.w*.4,GY-s.h*.4,8,30,'#030305');
+      r(drawX+s.w*.6,GY-s.h*.55,6,35,'#030305');
+    }else{
+      ctx.globalAlpha=.17;
+      r(drawX,GY-s.h*.4,s.w,s.h*.4,'#050508');
+      r(drawX+s.w*.1,GY-s.h*.6,s.w*.2,s.h*.2,'#050508');
+      r(drawX+s.w*.7,GY-s.h*.55,s.w*.2,s.h*.15,'#050508');
+      for(let i=0;i<4;i++){
+        r(drawX+s.w*(.05+i*.25),GY-s.h*(.3+i*.08),8,20+i*10,'#040406');
+      }
+      r(drawX+s.w*.3,GY-s.h*.5,6,25,'#030305');
+      r(drawX+s.w*.55,GY-s.h*.45,5,20,'#030305');
     }
     ctx.globalAlpha=1;
   });
