@@ -402,10 +402,10 @@ function spawnSlide(){
 function spawnFlyer(){
   flyers.push({
     x:100+Math.random()*(RW-200),
-    y:60+Math.random()*(GY-200),
+    y:GY-80-Math.random()*60,
     w:28,h:20,hp:1,flash:0,
-    vx:(Math.random()<.5?1:-1)*(1+Math.random()),
-    vy:(Math.random()<.5?1:-1)*.5
+    vx:(Math.random()<.5?1:-1)*(0.5+Math.random()*0.5),
+    vy:(Math.random()<.5?1:-1)*.2
   });
 }
 
@@ -528,7 +528,7 @@ function update(){
   flyers.forEach((e,i)=>{
     e.x+=e.vx;e.y+=e.vy;
     if(e.x<20||e.x>RW-e.w-20)e.vx*=-1;
-    if(e.y<40||e.y>GY-150)e.vy*=-1;
+    if(e.y<GY-140||e.y>GY-40)e.vy*=-1;
     if(e.flash>0)e.flash--;
     if(col({x:P.x,y:P.y,w:P.duck?P.dw:P.w,h:P.duck?P.dh:P.h},{x:e.x-5,y:e.y-15,w:e.w+10,h:20}))playerHit();
   });
