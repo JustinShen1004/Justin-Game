@@ -107,21 +107,32 @@ function drawRoom(){
 
 function drawDoor(){
   const dx=RW-55,dy=GY-70,dw=40,dh=70;
+  const allDead=slimes.length===0&&runners.length===0&&!boss;
   const gl=Math.sin(frame*.06)*.3+.7;
-  const grad=ctx.createRadialGradient(dx+dw/2,dy+dh/2,5,dx+dw/2,dy+dh/2,70*gl);
-  grad.addColorStop(0,'rgba(80,255,80,0.35)');
-  grad.addColorStop(1,'transparent');
-  ctx.fillStyle=grad;ctx.fillRect(dx-60,dy-60,dw+120,dh+120);
-  r(dx,dy,dw,dh,'#3a6a3a');
-  r(dx+5,dy+5,dw-10,dh-10,'#4a8a4a');
-  r(dx+8,dy+8,dw-16,dh-16,'#5aaa5a');
-  r(dx+dw/2-4,dy+dh/2+8,8,12,'#3a6a3a');
+  if(allDead){
+    const grad=ctx.createRadialGradient(dx+dw/2,dy+dh/2,5,dx+dw/2,dy+dh/2,70*gl);
+    grad.addColorStop(0,'rgba(80,255,80,0.35)');
+    grad.addColorStop(1,'transparent');
+    ctx.fillStyle=grad;ctx.fillRect(dx-60,dy-60,dw+120,dh+120);
+    r(dx,dy,dw,dh,'#3a6a3a');
+    r(dx+5,dy+5,dw-10,dh-10,'#4a8a4a');
+    r(dx+8,dy+8,dw-16,dh-16,'#5aaa5a');
+    ctx.fillStyle=WHITE;ctx.font='10px "Press Start 2P",monospace';ctx.textAlign='center';
+    ctx.fillText('EXIT',dx+dw/2,dy-12);
+  }else{
+    r(dx,dy,dw,dh,'#4a3a3a');
+    r(dx+5,dy+5,dw-10,dh-10,'#5a4a4a');
+    r(dx+8,dy+8,dw-16,dh-16,'#6a5a5a');
+    r(dx+dw/2-6,dy+dh/2-6,12,12,'#aa6644');
+    ctx.fillStyle='#ff8866';ctx.font='8px "Press Start 2P",monospace';ctx.textAlign='center';
+    ctx.fillText('LOCKED',dx+dw/2,dy-10);
+    ctx.fillText('Kill all!',dx+dw/2,dy+dh+14);
+  }
+  r(dx+dw/2-4,dy+dh/2+8,8,12,'#3a3a3a');
   r(dx-4,dy-4,dw+8,4,'#5a5a6a');
   r(dx-4,dy+dh,dw+8,4,'#5a5a6a');
   r(dx-4,dy,4,dh,'#5a5a6a');
   r(dx+dw,dy,4,dh,'#5a5a6a');
-  ctx.fillStyle=WHITE;ctx.font='10px "Press Start 2P",monospace';ctx.textAlign='center';
-  ctx.fillText('EXIT',dx+dw/2,dy-12);
 }
 
 function drawSlime(s){
@@ -298,9 +309,9 @@ function drawWin(){
 
 function spawnSlime(isBoss){
   const s={x:RW+20,y:GY,w:isBoss?140:32+Math.random()*12,h:isBoss?90:22+Math.random()*8,
-    vx:0,dir:Math.random()<.5?1:-1,hp:isBoss?60:2,mhp:isBoss?60:2,
+    vx:0,dir:Math.random()<.5?1:-1,hp:isBoss?40:2,mhp:isBoss?40:2,
     boss:isBoss,flash:0,chargeTimer:0,charging:false,recharging:false,dashSpeed:0,dashDir:1};
-  if(isBoss){s.x=RW-300;boss=s;snd('boss');}
+  if(isBoss){s.x=RW-300;s.y=GY;boss=s;snd('boss');}
   else slimes.push(s);
 }
 
@@ -322,7 +333,7 @@ function resetRoom(){
   for(let i=0;i<ns;i++)setTimeout(()=>{if(state==='play')spawnSlime(false);},i*100);
   const nr=1+Math.min(room,3);
   for(let i=0;i<nr;i++)setTimeout(()=>{if(state==='play')spawnRunner();},600+i*150);
-  if(room===4&&!bossSpawned){
+  if(room===5&&!bossSpawned){
     setTimeout(()=>{if(state==='play'){spawnSlime(true);bossSpawned=true;}},2000);
   }
   P.x=100;P.y=GY;P.vy=0;P.jmp=false;P.jumps=0;P.inv=90;P.duck=false;
@@ -430,10 +441,11 @@ function update(){
     if(col({x:P.x,y:P.y,w:P.duck?P.dw:P.w,h:P.duck?P.dh:P.h},{x:boss.x,y:boss.y+boss.h*.3,w:boss.w,h:boss.h*.7}))playerHit();
   }
   const dx=RW-55;
-  if(P.x+P.w>dx&&P.y>GY-70&&fadeDir===0){
+  const allDead=slimes.length===0&&runners.length===0&&!boss;
+  if(P.x+P.w>dx&&P.y>GY-70&&fadeDir===0&&allDead){
     if(room<4){room++;score+=50;snd('door');fadeDir=1;}
-    else if(room===4&&!boss){room=5;score+=100;snd('door');fadeDir=1;}
-    else if(room===5&&!boss){state='win';if(score>hi){hi=Math.floor(score);localStorage.setItem('slimeHi3',hi);}}
+    else if(room===4){room=5;score+=100;snd('door');fadeDir=1;}
+    else if(room===5){state='win';if(score>hi){hi=Math.floor(score);localStorage.setItem('slimeHi3',hi);}}
   }
   for(let i=parts.length-1;i>=0;i--){
     const p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.15;p.l-=.018;
