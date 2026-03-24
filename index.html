@@ -234,51 +234,51 @@ function drawLayer3(){
 
 function drawLayerFront(){
   layerFront.forEach(s=>{
-    const parallax=camX*.85;
+    const parallax=camX*.95;
     const drawX=s.x-parallax;
-    if(drawX<-300||drawX>canvas.width+300)return;
+    if(drawX<-400||drawX>canvas.width+400)return;
     
     if(s.type===0){
-      ctx.globalAlpha=.2;
-      r(drawX,GY-s.h,s.w,s.h,'#050508');
-      r(drawX+s.w*.15,GY-s.h-40,s.w*.7,40,'#050508');
-      r(drawX+s.w*.3,GY-s.h-70,s.w*.4,30,'#050508');
-      r(drawX+s.w*.35,GY-s.h-100,s.w*.3,30,'#050508');
-      r(drawX+15,GY-s.h+20,12,40,'#040406');
-      r(drawX+s.w-27,GY-s.h+25,12,35,'#040406');
-      r(drawX+s.w*.25,GY-s.h-55,8,60,'#030305');
-      r(drawX+s.w*.65,GY-s.h-50,8,55,'#030305');
-      r(drawX+s.w*.45,GY-s.h-120,6,50,'#030305');
+      ctx.globalAlpha=1;
+      r(drawX,GY-s.h,s.w,s.h,'#000000');
+      r(drawX+s.w*.15,GY-s.h-50,s.w*.7,50,'#000000');
+      r(drawX+s.w*.3,GY-s.h-90,s.w*.4,40,'#000000');
+      r(drawX+s.w*.35,GY-s.h-130,s.w*.3,40,'#000000');
+      r(drawX+20,GY-s.h+25,15,50,'#000000');
+      r(drawX+s.w-35,GY-s.h+30,15,45,'#000000');
+      r(drawX+s.w*.25,GY-s.h-70,10,80,'#000000');
+      r(drawX+s.w*.65,GY-s.h-65,10,70,'#000000');
+      r(drawX+s.w*.45,GY-s.h-150,8,65,'#000000');
     }else if(s.type===1){
-      ctx.globalAlpha=.18;
-      r(drawX,GY-s.h*.6,s.w,s.h*.6,'#050508');
-      r(drawX+s.w*.1,GY-s.h,s.w*.3,s.h*.4,'#050508');
-      r(drawX+s.w*.55,GY-s.h*.85,s.w*.25,s.h*.25,'#050508');
-      r(drawX+s.w*.4,GY-s.h*.5,20,50,'#040406');
-      r(drawX+s.w*.7,GY-s.h*.4,16,45,'#040406');
-      r(drawX+s.w*.15,GY-s.h*.7,10,35,'#030305');
-      r(drawX+s.w*.5,GY-s.h*.75,8,30,'#030305');
-      r(drawX+s.w*.85,GY-s.h*.45,6,25,'#030305');
+      ctx.globalAlpha=1;
+      r(drawX,GY-s.h*.7,s.w,s.h*.7,'#000000');
+      r(drawX+s.w*.1,GY-s.h*1.1,s.w*.35,s.h*.4,'#000000');
+      r(drawX+s.w*.55,GY-s.h*.95,s.w*.3,s.h*.3,'#000000');
+      r(drawX+s.w*.35,GY-s.h*.6,25,60,'#000000');
+      r(drawX+s.w*.7,GY-s.h*.5,20,55,'#000000');
+      r(drawX+s.w*.15,GY-s.h*.8,12,45,'#000000');
+      r(drawX+s.w*.5,GY-s.h*.85,10,40,'#000000');
+      r(drawX+s.w*.85,GY-s.h*.55,8,35,'#000000');
     }else if(s.type===2){
-      ctx.globalAlpha=.16;
-      r(drawX,GY-s.h*.5,s.w,s.h*.5,'#050508');
-      r(drawX+s.w*.2,GY-s.h*.7,s.w*.6,s.h*.2,'#050508');
-      r(drawX+s.w*.35,GY-s.h*.9,s.w*.3,s.h*.2,'#050508');
-      for(let i=0;i<3;i++){
-        r(drawX+s.w*(.15+i*.35),GY-s.h*.6,10,45,'#040406');
-      }
-      r(drawX+s.w*.4,GY-s.h*.4,8,30,'#030305');
-      r(drawX+s.w*.6,GY-s.h*.55,6,35,'#030305');
-    }else{
-      ctx.globalAlpha=.17;
-      r(drawX,GY-s.h*.4,s.w,s.h*.4,'#050508');
-      r(drawX+s.w*.1,GY-s.h*.6,s.w*.2,s.h*.2,'#050508');
-      r(drawX+s.w*.7,GY-s.h*.55,s.w*.2,s.h*.15,'#050508');
+      ctx.globalAlpha=1;
+      r(drawX,GY-s.h*.6,s.w,s.h*.6,'#000000');
+      r(drawX+s.w*.2,GY-s.h*.8,s.w*.6,s.h*.25,'#000000');
+      r(drawX+s.w*.35,GY-s.h*1.05,s.w*.3,s.h*.25,'#000000');
       for(let i=0;i<4;i++){
-        r(drawX+s.w*(.05+i*.25),GY-s.h*(.3+i*.08),8,20+i*10,'#040406');
+        r(drawX+s.w*(.1+i*.3),GY-s.h*(.5+i*.1),12,55+i*15,'#000000');
       }
-      r(drawX+s.w*.3,GY-s.h*.5,6,25,'#030305');
-      r(drawX+s.w*.55,GY-s.h*.45,5,20,'#030305');
+      r(drawX+s.w*.4,GY-s.h*.5,10,40,'#000000');
+      r(drawX+s.w*.6,GY-s.h*.65,8,45,'#000000');
+    }else{
+      ctx.globalAlpha=1;
+      r(drawX,GY-s.h*.5,s.w,s.h*.5,'#000000');
+      r(drawX+s.w*.1,GY-s.h*.7,s.w*.25,s.h*.25,'#000000');
+      r(drawX+s.w*.7,GY-s.h*.65,s.w*.25,s.h*.2,'#000000');
+      for(let i=0;i<5;i++){
+        r(drawX+s.w*(.05+i*.22),GY-s.h*(.35+i*.1),10,25+i*12,'#000000');
+      }
+      r(drawX+s.w*.3,GY-s.h*.6,8,35,'#000000');
+      r(drawX+s.w*.55,GY-s.h*.55,7,30,'#000000');
     }
     ctx.globalAlpha=1;
   });
@@ -302,7 +302,6 @@ function drawRoom(){
   r(0,GY,canvas.width,10,STONE_L);
   r(0,GY+10,canvas.width,RH-GY-10,STONE_D);
   for(let x=-camX*.2%50;x<canvas.width+50;x+=50)r(x,GY+10,47,16,STONE);
-  drawLayerFront();
   r(0,0,canvas.width,10,'#1a1a2a');
   r(0,0,10,RH,'#1a1a2a');
   r(canvas.width-10,0,10,RH,'#1a1a2a');
@@ -784,6 +783,7 @@ function draw(){
     ctx.globalAlpha=p.l;r(pX-p.s/2,p.y-p.s/2,p.s,p.s,p.c);
   });
   ctx.globalAlpha=1;
+  drawLayerFront();
   if(flash>0){ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(0,0,canvas.width,RH);}
   ctx.restore();
   drawHUD();if(boss)drawBossHP();
