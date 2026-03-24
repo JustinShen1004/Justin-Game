@@ -51,7 +51,7 @@ function snd(t){
     door:['sawtooth',150,80,.15,.1],dash:['sawtooth',300,100,.08,.1],
     win:['sine',400,800,.25,.1],slide:['sine',200,400,.04,.05],
     bshoot:['square',150,60,.1,.1],squish:['sine',150,80,.08,.1],
-    drip:['sine',800,400,.05,.03]}[t];
+    drip:['sine',800,400,.05,.03],thunder:['sawtooth',100,30,.8,.4]}[t];
   if(!f)return;
   o.type=f[0];o.frequency.setValueAtTime(f[1],n);o.frequency.exponentialRampToValueAtTime(f[2],n+f[3]);
   g.gain.setValueAtTime(f[4],n);g.gain.exponentialRampToValueAtTime(.001,n+f[3]+.02);
@@ -97,12 +97,12 @@ function genLayers(){
       h:10+Math.random()*20
     });
   }
-  for(let i=0;i<100;i++){
+  for(let i=0;i<200;i++){
     rainDrops.push({
       x:Math.random()*RW,
       y:Math.random()*RH,
-      speed:8+Math.random()*6,
-      length:10+Math.random()*15
+      speed:12+Math.random()*8,
+      length:15+Math.random()*20
     });
   }
 }
@@ -143,30 +143,35 @@ function drawWaterDrops(){
 }
 
 function drawRain(){
-  ctx.strokeStyle='rgba(150,180,220,0.4)';
-  ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(180,200,240,0.6)';
+  ctx.lineWidth=2;
   rainDrops.forEach(d=>{
     const parallax=camX*.8;
     const drawX=d.x-parallax;
     d.y+=d.speed;
     if(d.y>RH){
-      d.y=-20;
+      d.y=-30;
       d.x=Math.random()*RW;
     }
-    if(drawX<-20||drawX>canvas.width+20)return;
+    if(drawX<-30||drawX>canvas.width+30)return;
     ctx.beginPath();
     ctx.moveTo(drawX,d.y);
-    ctx.lineTo(drawX-2,d.y+d.length);
+    ctx.lineTo(drawX-3,d.y+d.length);
     ctx.stroke();
   });
 }
 
 function drawLightning(){
   if(lightning>0){
-    ctx.fillStyle=`rgba(255,255,255,${lightning*.3})`;
+    ctx.fillStyle=`rgba(255,255,255,${lightning*.5})`;
     ctx.fillRect(0,0,canvas.width,RH);
-    lightning-=0.1;
+    lightning-=0.05;
   }
+}
+
+function drawRainFilter(){
+  ctx.fillStyle='rgba(20,25,40,0.3)';
+  ctx.fillRect(0,0,canvas.width,RH);
 }
 
 function drawLayer1(){
@@ -672,6 +677,7 @@ function update(){
   if(lightningTimer>180+Math.random()*120){
     lightning=1;
     lightningTimer=0;
+    snd('thunder');
   }
   
   if(fadeDir!==0){
@@ -826,6 +832,7 @@ function draw(){
   });
   ctx.globalAlpha=1;
   drawLayerFront();
+  drawRainFilter();
   drawLightning();
   if(flash>0){ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(0,0,canvas.width,RH);}
   ctx.restore();
