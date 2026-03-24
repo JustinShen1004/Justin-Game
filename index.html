@@ -26,7 +26,11 @@ SLIME_BOSS='#9944ff',SLIME_BOSS_D='#6622bb',
 PLAYER='#4488ff',PLAYER_D='#2255bb',WHITE='#ffffff',BLACK='#0a0a12',COIN='#ffdd44',
 HP_FULL='#44cc44',HP_EMPTY='#333344',HP_BOSS='#cc4444',MANA='#4488ff',MANA_E='#223344',
 VINE='#2a5a2a',VINE_D='#1a4a1a',MOSS='#3a6a3a',MOSS_D='#2a5a2a',
-WOOD='#5a4a3a',WOOD_D='#4a3a2a',WOOD_DD='#3a2a1a',WATER='#4488cc',WATER_D='#2266aa';
+WOOD='#5a4a3a',WOOD_D='#4a3a2a',WOOD_DD='#3a2a1a',WATER='#4488cc',WATER_D='#2266aa',
+// New character colors
+WIZARD='#4a3a8a',WIZARD_D='#3a2a6a',WIZARD_L='#6a5aaa',STAFF='#8a6a4a',STAFF_D='#6a4a2a',ORB='#aa88ff',ORB_G='#cc99ff',
+STONE_MON='#6a6a7a',STONE_MON_D='#5a5a6a',STONE_MON_L='#7a7a8a',STONE_EYE='#ff4444',
+BAT='#4a3a3a',BAT_D='#3a2a2a',BAT_L='#5a4a4a',BAT_WING='#3a2a2a';
 
 let state='menu',score=0,coins=0,hi=parseInt(localStorage.getItem('slimeHi9'))||0,frame=0,room=0,shake=0,flash=0;
 let fadeAlpha=0,fadeDir=0,fadeTarget=null,camX=0;
@@ -429,27 +433,59 @@ function drawDoor(){
 function drawSlime(s){
   const sX=s.x-camX;
   if(sX<-250||sX>canvas.width+250)return;
-  const sq=Math.sin(frame*.04+s.x*.08)*.12;
+  const sq=Math.sin(frame*.03+s.x*.06)*.05;
   const w=s.w*(1+sq),h=s.h*(1-sq);
-  const col=s.boss?SLIME_BOSS:SLIME,colD=s.boss?SLIME_BOSS_D:SLIME_D;
+  const col=s.boss?SLIME_BOSS:STONE_MON,colD=s.boss?SLIME_BOSS_D:STONE_MON_D,colL=s.boss?'#bb99ff':STONE_MON_L;
   if(s.flash>0&&s.flash%2===0)return;
   const sx=sX+(s.w-w)/2,sy=s.y-h;
-  r(sx+4,sy+h-5,w-8,10,'rgba(0,0,0,0.35)');
+  
+  // Shadow
+  r(sx+6,sy+h-6,w-12,12,'rgba(0,0,0,0.35)');
+  
+  // Body (rocky texture)
   r(sx,sy,w,h,col);
-  r(sx+6,sy+6,w-12,h-12,colD);
-  r(sx+10,sy+10,w-20,h/2+6,col);
-  r(sx+w*.15,sy+h*.25,14,14,WHITE);
-  r(sx+w*.6,sy+h*.25,14,14,WHITE);
-  r(sx+w*.15+5,sy+h*.25+5,6,6,BLACK);
-  r(sx+w*.6+5,sy+h*.25+5,6,6,BLACK);
+  r(sx+8,sy+8,w-16,h-16,colD);
+  r(sx+12,sy+12,w-24,h/2,colL);
+  
+  // Rocky texture details
+  r(sx+w*.2,sy+h*.3,w*.15,h*.15,colL);
+  r(sx+w*.65,sy+h*.4,w*.12,h*.12,colL);
+  r(sx+w*.4,sy+h*.6,w*.18,h*.1,colD);
+  
+  // Glowing red eyes
+  r(sx+w*.2,sy+h*.2,16,12,STONE_EYE);
+  r(sx+w*.6,sy+h*.2,16,12,STONE_EYE);
+  r(sx+w*.2+3,sy+h*.2+2,10,8,'#ff6644');
+  r(sx+w*.6+3,sy+h*.2+2,10,8,'#ff6644');
+  r(sx+w*.2+5,sy+h*.2+4,6,4,'#ffaa88');
+  r(sx+w*.6+5,sy+h*.2+4,6,4,'#ffaa88');
+  
+  // Mouth crack
+  r(sx+w*.3,sy+h*.55,w*.4,6,colD);
+  r(sx+w*.35,sy+h*.57,w*.3,3,STONE_EYE);
+  
+  // Arms (rocky)
+  r(sx-15,sy+h*.4,20,30,col);
+  r(sx+w-5,sy+h*.4,20,30,col);
+  r(sx-12,sy+h*.45,15,20,colD);
+  r(sx+w-3,sy+h*.45,15,20,colD);
+  
+  // Legs
+  r(sx+w*.2,sy+h-5,w*.2,15,col);
+  r(sx+w*.6,sy+h-5,w*.2,15,col);
+  r(sx+w*.22,sy+h-3,w*.16,10,colD);
+  r(sx+w*.62,sy+h-3,w*.16,10,colD);
+  
+  // Boss specific
   if(s.boss){
     if(s.hp<=s.mhp/2){
-      ctx.fillStyle=`rgba(255,50,50,${.2+Math.sin(frame*.12)*.12})`;
-      ctx.beginPath();ctx.arc(sx+w/2,sy+h/2,w*.7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=`rgba(255,50,50,${.25+Math.sin(frame*.1)*.15})`;
+      ctx.beginPath();ctx.arc(sx+w/2,sy+h/2,w*.8,0,Math.PI*2);ctx.fill();
     }
-    r(sx+w*.2,sy+h*.45,w*.6,8,'#ff4444');
-    r(sx+w*.25,sy+h*.55,w*.5,5,'#cc2222');
-    r(sx+w*.3,sy+h*.65,w*.4,3,'#aa1111');
+    // Crown/horns
+    r(sx+w*.3,sy-20,w*.1,25,SLIME_BOSS);
+    r(sx+w*.6,sy-20,w*.1,25,SLIME_BOSS);
+    r(sx+w*.45,sy-30,w*.1,35,SLIME_BOSS_D);
   }
 }
 
@@ -457,57 +493,163 @@ function drawSlide(e){
   const eX=e.x-camX;
   if(eX<-120||eX>canvas.width+120)return;
   if(e.flash>0&&e.flash%2===0)return;
-  const stretch=Math.sin(frame*.08+e.x*.08)*.1;
-  const w=e.w*(1+stretch),h=e.h*(1-stretch*.4);
+  const stretch=Math.sin(frame*.06+e.x*.06)*.08;
+  const w=e.w*(1+stretch),h=e.h*(1-stretch*.3);
   const sx=eX+(e.w-w)/2,sy=e.y-h;
+  
+  // Shadow
   r(sx+4,sy+h-4,w-8,8,'rgba(0,0,0,0.25)');
-  r(sx,sy,w,h,SLIDE);
-  r(sx+6,sy+6,w-12,h-12,SLIDE_D);
-  r(sx+10,sy+10,w-20,h/2,SLIDE);
-  r(sx+w*.18,sy+h*.28,12,12,WHITE);
-  r(sx+w*.55,sy+h*.28,12,12,WHITE);
-  r(sx+w*.18+4,sy+h*.28+4,6,6,BLACK);
-  r(sx+w*.55+4,sy+h*.28+4,6,6,BLACK);
+  
+  // Body (low stone creature)
+  r(sx,sy,w,h,STONE_MON);
+  r(sx+5,sy+5,w-10,h-10,STONE_MON_D);
+  r(sx+8,sy+8,w-16,h-16,STONE_MON_L);
+  
+  // Rocky texture
+  r(sx+w*.15,sy+h*.2,w*.2,h*.3,STONE_MON_L);
+  r(sx+w*.6,sy+h*.3,w*.15,h*.25,STONE_MON_D);
+  
+  // Glowing eyes
+  r(sx+w*.2,sy+h*.25,10,8,STONE_EYE);
+  r(sx+w*.55,sy+h*.25,10,8,STONE_EYE);
+  r(sx+w*.2+2,sy+h*.25+2,6,4,'#ff8866');
+  r(sx+w*.55+2,sy+h*.25+2,6,4,'#ff8866');
+  
+  // Mouth
+  r(sx+w*.3,sy+h*.55,w*.4,5,STONE_MON_D);
+  r(sx+w*.35,sy+h*.57,w*.3,2,STONE_EYE);
+  
+  // Sliding motion lines
+  ctx.strokeStyle='rgba(100,100,110,0.3)';
+  ctx.lineWidth=2;
+  for(let i=0;i<3;i++){
+    ctx.beginPath();
+    ctx.moveTo(sx-10-i*15,sy+h*.3+i*10);
+    ctx.lineTo(sx-25-i*15,sy+h*.3+i*10);
+    ctx.stroke();
+  }
 }
 
 function drawFlyer(e){
   const eX=e.x-camX;
   if(eX<-120||eX>canvas.width+120)return;
   if(e.flash>0&&e.flash%2===0)return;
-  const bob=Math.sin(frame*.06+e.x*.025)*10;
-  const wing=Math.sin(frame*.1+e.x)*.5;
-  r(eX+e.w/2-4,e.y-18+bob,8,24,FLYER_D);
-  r(eX-8,e.y-28+bob,e.w+16,22,FLYER);
-  r(eX,e.y-22+bob,e.w,14,FLYER_D);
-  r(eX-20+wing*18,e.y-16+bob,22,12,FLYER);
-  r(eX+e.w-2-wing*18,e.y-16+bob,22,12,FLYER);
-  r(eX+8,e.y-20+bob,10,10,WHITE);
-  r(eX+e.w-18,e.y-20+bob,10,10,WHITE);
-  r(eX+11,e.y-17+bob,5,5,BLACK);
-  r(eX+e.w-15,e.y-17+bob,5,5,BLACK);
-  r(eX+e.w/2-5,e.y-4+bob,10,5,FLYER_D);
+  const bob=Math.sin(frame*.08+e.x*.03)*8;
+  const wingFlap=Math.sin(frame*.25+e.x*.1);
+  
+  // Body
+  r(eX+e.w/2-8,e.y-20+bob,16,24,BAT);
+  r(eX+e.w/2-5,e.y-17+bob,10,18,BAT_D);
+  
+  // Head
+  r(eX+e.w/2-10,e.y-32+bob,20,14,BAT);
+  r(eX+e.w/2-7,e.y-29+bob,14,10,BAT_D);
+  
+  // Ears
+  r(eX+e.w/2-12,e.y-42+bob,6,12,BAT);
+  r(eX+e.w/2+6,e.y-42+bob,6,12,BAT);
+  r(eX+e.w/2-10,e.y-40+bob,3,8,BAT_D);
+  r(eX+e.w/2+7,e.y-40+bob,3,8,BAT_D);
+  
+  // Eyes (red glowing)
+  r(eX+e.w/2-6,e.y-28+bob,5,5,STONE_EYE);
+  r(eX+e.w/2+1,e.y-28+bob,5,5,STONE_EYE);
+  r(eX+e.w/2-5,e.y-27+bob,3,3,'#ff8866');
+  r(eX+e.w/2+2,e.y-27+bob,3,3,'#ff8866');
+  
+  // Wings (animated)
+  const leftWingX=eX+e.w/2-35+wingFlap*15;
+  const rightWingX=eX+e.w/2+5-wingFlap*15;
+  const wingY=e.y-18+bob;
+  
+  // Left wing
+  ctx.beginPath();
+  ctx.moveTo(eX+e.w/2-8,wingY+10);
+  ctx.lineTo(leftWingX,wingY-5+wingFlap*8);
+  ctx.lineTo(leftWingX+10,wingY+5);
+  ctx.lineTo(leftWingX+20,wingY+15);
+  ctx.lineTo(eX+e.w/2-8,wingY+20);
+  ctx.fillStyle=BAT_WING;
+  ctx.fill();
+  
+  // Right wing
+  ctx.beginPath();
+  ctx.moveTo(eX+e.w/2+8,wingY+10);
+  ctx.lineTo(rightWingX+30,wingY-5+wingFlap*8);
+  ctx.lineTo(rightWingX+20,wingY+5);
+  ctx.lineTo(rightWingX+10,wingY+15);
+  ctx.lineTo(eX+e.w/2+8,wingY+20);
+  ctx.fillStyle=BAT_WING;
+  ctx.fill();
+  
+  // Feet
+  r(eX+e.w/2-6,e.y+2+bob,4,6,BAT_D);
+  r(eX+e.w/2+2,e.y+2+bob,4,6,BAT_D);
 }
 
 function drawPlayer(){
   if(P.inv>0&&Math.floor(P.inv/3)%2===0)return;
-  const fl=P.pf>0?WHITE:PLAYER;
+  const fl=P.pf>0?WHITE:WIZARD;
   let w,h,py;
   if(P.duck){w=P.dw;h=P.dh;py=GY-h;}else{w=P.w;h=P.h;py=P.y-h;}
   const x=P.x-camX;
   const bounce=P.run&&!P.jmp?Math.sin(P.bf)*5:0;
+  
+  // Shadow
   r(x-5,GY-5,w+10,10,'rgba(0,0,0,0.3)');
+  
+  // Robe (main body)
   r(x,py-bounce,w,h,fl);
-  r(x+5,py+5-bounce,w-10,h-10,PLAYER_D);
-  r(x+(P.face>0?w-16:7),py+16-bounce,14,14,WHITE);
-  r(x+(P.face>0?w-12:11),py+20-bounce,7,7,BLACK);
+  r(x+4,py+4-bounce,w-8,h-8,WIZARD_D);
+  
+  // Robe trim
+  r(x+2,py+h-12-bounce,w-4,4,WIZARD_L);
+  
+  // Head (exposed face area)
+  r(x+(P.face>0?w-18:6),py+8-bounce,16,18,WIZARD_L);
+  
+  // Eyes
+  r(x+(P.face>0?w-14:10),py+14-bounce,8,8,WHITE);
+  r(x+(P.face>0?w-12:12),py+16-bounce,5,5,ORB);
+  
+  // Wizard hat
+  const hatX=x+w/2-14;
+  r(hatX,py-25-bounce,28,30,WIZARD);
+  r(hatX+5,py-50-bounce,18,28,WIZARD);
+  r(hatX+9,py-68-bounce,10,20,WIZARD);
+  r(hatX+11,py-75-bounce,6,10,WIZARD_L);
+  // Hat brim
+  r(hatX-5,py-2-bounce,38,6,WIZARD_D);
+  // Star on hat
+  r(hatX+10,py-55-bounce,8,8,ORB_G);
+  r(hatX+12,py-53-bounce,4,4,ORB);
+  
+  // Staff (always visible)
+  const staffX=P.face>0?x+w+2:x-25;
+  r(staffX,py-60-bounce,8,110,STAFF);
+  r(staffX+1,py-58-bounce,6,106,STAFF_D);
+  // Staff orb
+  const orbGlow=Math.sin(frame*.1)*.3+.7;
+  ctx.fillStyle=`rgba(170,136,255,${orbGlow})`;
+  ctx.beginPath();
+  ctx.arc(staffX+4,py-65-bounce,12,0,Math.PI*2);
+  ctx.fill();
+  r(staffX-4,py-73-bounce,16,16,ORB);
+  r(staffX-2,py-71-bounce,12,12,ORB_G);
+  r(staffX,py-69-bounce,8,8,WHITE);
+  
+  // Legs (walking animation)
   if(!P.duck&&!P.jmp){
     const l=Math.floor(P.bf/3)%2;
-    r(x+6,py+h-bounce,16,l?20:9,PLAYER_D);
-    r(x+w-22,py+h-bounce,16,l?9:20,PLAYER_D);
-    r(x+4,py+h+(l?20:9)-bounce,20,7,PLAYER_D);
-    r(x+w-24,py+h+(l?9:20)-bounce,20,7,PLAYER_D);
+    r(x+8,py+h-bounce,12,l?22:10,WIZARD_D);
+    r(x+w-20,py+h-bounce,12,l?10:22,WIZARD_D);
+    r(x+6,py+h+(l?22:10)-bounce,16,6,STAFF_D);
+    r(x+w-22,py+h+(l?10:22)-bounce,16,6,STAFF_D);
   }
-  if(P.jmp){r(x+5,py+h,18,9,PLAYER_D);r(x+w-23,py+h,18,9,PLAYER_D);}
+  if(P.jmp){
+    r(x+8,py+h,14,10,WIZARD_D);
+    r(x+w-22,py+h,14,10,WIZARD_D);
+  }
 }
 
 function drawBullets(){
