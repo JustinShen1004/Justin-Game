@@ -194,7 +194,7 @@ function drawLayer3(){
     const parallax=camX*.55;
     const drawX=o.x-parallax;
     if(drawX<-150||drawX>canvas.width+150)return;
-    ctx.globalAlpha=.35;
+    ctx.globalAlpha=1;
     if(o.type===0){
       r(drawX,GY-80,60,80,WOOD);
       r(drawX+5,GY-75,50,10,WOOD_D);
@@ -238,8 +238,9 @@ function drawLayerFront(){
     const drawX=s.x-parallax;
     if(drawX<-400||drawX>canvas.width+400)return;
     
+    ctx.globalAlpha=0.25;
+    
     if(s.type===0){
-      ctx.globalAlpha=1;
       r(drawX,GY-s.h,s.w,s.h,'#000000');
       r(drawX+s.w*.15,GY-s.h-50,s.w*.7,50,'#000000');
       r(drawX+s.w*.3,GY-s.h-90,s.w*.4,40,'#000000');
@@ -250,7 +251,6 @@ function drawLayerFront(){
       r(drawX+s.w*.65,GY-s.h-65,10,70,'#000000');
       r(drawX+s.w*.45,GY-s.h-150,8,65,'#000000');
     }else if(s.type===1){
-      ctx.globalAlpha=1;
       r(drawX,GY-s.h*.7,s.w,s.h*.7,'#000000');
       r(drawX+s.w*.1,GY-s.h*1.1,s.w*.35,s.h*.4,'#000000');
       r(drawX+s.w*.55,GY-s.h*.95,s.w*.3,s.h*.3,'#000000');
@@ -260,7 +260,6 @@ function drawLayerFront(){
       r(drawX+s.w*.5,GY-s.h*.85,10,40,'#000000');
       r(drawX+s.w*.85,GY-s.h*.55,8,35,'#000000');
     }else if(s.type===2){
-      ctx.globalAlpha=1;
       r(drawX,GY-s.h*.6,s.w,s.h*.6,'#000000');
       r(drawX+s.w*.2,GY-s.h*.8,s.w*.6,s.h*.25,'#000000');
       r(drawX+s.w*.35,GY-s.h*1.05,s.w*.3,s.h*.25,'#000000');
@@ -270,7 +269,6 @@ function drawLayerFront(){
       r(drawX+s.w*.4,GY-s.h*.5,10,40,'#000000');
       r(drawX+s.w*.6,GY-s.h*.65,8,45,'#000000');
     }else{
-      ctx.globalAlpha=1;
       r(drawX,GY-s.h*.5,s.w,s.h*.5,'#000000');
       r(drawX+s.w*.1,GY-s.h*.7,s.w*.25,s.h*.25,'#000000');
       r(drawX+s.w*.7,GY-s.h*.65,s.w*.25,s.h*.2,'#000000');
