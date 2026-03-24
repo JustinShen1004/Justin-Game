@@ -78,21 +78,30 @@ function genLayers(){
   layer1.length=0;layer2.length=0;layer3.length=0;layerFront.length=0;
   waterDrops.length=0;mossPatches.length=0;rainDrops.length=0;
   
+  // Layer 1: Closest torches (15% parallax)
   for(let i=0;i<20;i++){
     layer1.push({x:Math.random()*RW,y:40+Math.random()*(GY-120),flicker:Math.random()*10});
   }
+  // Layer 2: Mid torches (35% parallax)
   for(let i=0;i<15;i++){
     layer2.push({x:Math.random()*RW,y:60+Math.random()*(GY-140),flicker:Math.random()*10});
   }
-  for(let i=0;i<25;i++){
-    layer3.push({x:Math.random()*RW,y:GY,type:Math.floor(Math.random()*4)});
+  // Layer 3: Background structures (55% parallax) - 8 types now
+  for(let i=0;i<30;i++){
+    layer3.push({
+      x:Math.random()*RW,
+      y:GY,
+      type:Math.floor(Math.random()*8),
+      size:0.8+Math.random()*0.6 // Size variation
+    });
   }
-  for(let i=0;i<10;i++){
+  // Layer Front: Foreground objects (95% parallax) - 6 types, larger
+  for(let i=0;i<12;i++){
     layerFront.push({
       x:Math.random()*RW,
-      w:150+Math.random()*200,
-      h:120+Math.random()*180,
-      type:Math.floor(Math.random()*4)
+      w:200+Math.random()*250,
+      h:150+Math.random()*220,
+      type:Math.floor(Math.random()*6)
     });
   }
   for(let i=0;i<8;i++){
@@ -271,40 +280,81 @@ function drawLayer3(){
   layer3.forEach(o=>{
     const parallax=camX*.55;
     const drawX=o.x-parallax;
-    if(drawX<-250||drawX>canvas.width+250)return;
+    if(drawX<-300||drawX>canvas.width+300)return;
     ctx.globalAlpha=1;
+    const s=o.size; // Size multiplier
+    
     if(o.type===0){
-      r(drawX,GY-160,120,160,WOOD);
-      r(drawX+10,GY-150,100,20,WOOD_D);
-      r(drawX+8,GY-120,50,10,WOOD_DD);
-      r(drawX+65,GY-100,45,10,WOOD_DD);
-      r(drawX+15,GY-70,60,8,WOOD_D);
-      r(drawX+100,GY-190,16,190,WOOD_D);
-      r(drawX+104,GY-185,8,8,WOOD_DD);
-      r(drawX+40,GY-220,14,60,WOOD_DD);
+      // Tall tower
+      r(drawX,GY-200*s,140*s,200*s,WOOD);
+      r(drawX+12*s,GY-188*s,116*s,25*s,WOOD_D);
+      r(drawX+10*s,GY-150*s,60*s,12*s,WOOD_DD);
+      r(drawX+75*s,GY-125*s,55*s,12*s,WOOD_DD);
+      r(drawX+18*s,GY-85*s,70*s,10*s,WOOD_D);
+      r(drawX+115*s,GY-235*s,20*s,235*s,WOOD_D);
+      r(drawX+120*s,GY-230*s,10*s,10*s,WOOD_DD);
+      r(drawX+50*s,GY-275*s,18*s,75*s,WOOD_DD);
     }else if(o.type===1){
-      r(drawX,GY-120,95,120,WOOD);
-      r(drawX-20,GY-100,40,15,WOOD_D);
-      r(drawX+75,GY-75,38,12,WOOD_D);
-      for(let i=0;i<6;i++)r(drawX+10+i*14,GY-90+i*12,15,6,WOOD_DD);
-      r(drawX+35,GY-160,10,40,WOOD_DD);
-      r(drawX+60,GY-155,8,35,WOOD_DD);
+      // Broken house
+      r(drawX,GY-150*s,120*s,150*s,WOOD);
+      r(drawX-25*s,GY-125*s,50*s,18*s,WOOD_D);
+      r(drawX+95*s,GY-95*s,48*s,15*s,WOOD_D);
+      for(let i=0;i<7;i++)r(drawX+12*s+i*16*s,GY-115*s+i*14*s,18*s,8*s,WOOD_DD);
+      r(drawX+45*s,GY-200*s,12*s,50*s,WOOD_DD);
+      r(drawX+75*s,GY-195*s,10*s,45*s,WOOD_DD);
     }else if(o.type===2){
-      r(drawX,GY-140,100,140,WOOD);
-      r(drawX+30,GY-180,40,40,WOOD_D);
-      r(drawX+40,GY-210,20,30,WOOD_DD);
-      r(drawX+10,GY-80,80,10,WOOD_DD);
-      r(drawX+20,GY-50,50,8,WOOD_D);
-      r(drawX+70,GY-240,14,100,WOOD_DD);
-      r(drawX+20,GY-230,10,90,WOOD_DD);
-    }else{
-      for(let i=0;i<3;i++){
-        r(drawX+i*50,GY-(100-i*20),40,100-i*20,WOOD);
-        r(drawX+i*50+10,GY-(80-i*20),20,10,WOOD_DD);
+      // Watchtower
+      r(drawX,GY-175*s,130*s,175*s,WOOD);
+      r(drawX+35*s,GY-225*s,55*s,50*s,WOOD_D);
+      r(drawX+50*s,GY-265*s,25*s,40*s,WOOD_DD);
+      r(drawX+12*s,GY-100*s,100*s,12*s,WOOD_DD);
+      r(drawX+25*s,GY-65*s,65*s,10*s,WOOD_D);
+      r(drawX+90*s,GY-300*s,18*s,125*s,WOOD_DD);
+      r(drawX+25*s,GY-290*s,12*s,115*s,WOOD_DD);
+    }else if(o.type===3){
+      // Multiple pillars
+      for(let i=0;i<4;i++){
+        r(drawX+i*60*s,GY-(125-i*25)*s,50*s,(125-i*25)*s,WOOD);
+        r(drawX+i*60*s+12*s,GY-(100-i*25)*s,25*s,12*s,WOOD_DD);
       }
-      r(drawX+20,GY-170,8,70,WOOD_DD);
-      r(drawX+70,GY-160,10,60,WOOD_DD);
-      r(drawX+110,GY-140,8,40,WOOD_DD);
+      r(drawX+25*s,GY-215*s,10*s,90*s,WOOD_DD);
+      r(drawX+90*s,GY-200*s,12*s,75*s,WOOD_DD);
+      r(drawX+140*s,GY-175*s,10*s,50*s,WOOD_DD);
+    }else if(o.type===4){
+      // Ruined arch
+      r(drawX,GY-180*s,50*s,180*s,WOOD);
+      r(drawX+130*s,GY-180*s,50*s,180*s,WOOD);
+      r(drawX+50*s,GY-220*s,80*s,40*s,WOOD_D);
+      r(drawX+60*s,GY-200*s,60*s,20*s,WOOD_DD);
+      r(drawX+15*s,GY-215*s,8*s,35*s,WOOD_DD);
+      r(drawX+155*s,GY-215*s,8*s,35*s,WOOD_DD);
+    }else if(o.type===5){
+      // Stone wall section
+      r(drawX,GY-100*s,200*s,100*s,STONE_D);
+      r(drawX+10*s,GY-90*s,40*s,20*s,STONE);
+      r(drawX+60*s,GY-85*s,35*s,25*s,STONE_DD);
+      r(drawX+110*s,GY-90*s,45*s,20*s,STONE);
+      r(drawX+165*s,GY-85*s,25*s,25*s,STONE_DD);
+      r(drawX+25*s,GY-130*s,12*s,30*s,STONE_L);
+      r(drawX+95*s,GY-125*s,10*s,25*s,STONE_L);
+      r(drawX+165*s,GY-130*s,12*s,30*s,STONE_L);
+    }else if(o.type===6){
+      // Fallen columns
+      r(drawX,GY-40*s,180*s,40*s,STONE);
+      r(drawX+20*s,GY-70*s,30*s,30*s,STONE_D);
+      r(drawX+80*s,GY-60*s,25*s,20*s,STONE_DD);
+      r(drawX+140*s,GY-75*s,35*s,35*s,STONE_D);
+      r(drawX+30*s,GY-45*s,20*s,5*s,STONE_L);
+      r(drawX+100*s,GY-50*s,25*s,5*s,STONE_L);
+    }else{
+      // Archway ruins
+      r(drawX,GY-160*s,60*s,160*s,WOOD);
+      r(drawX+120*s,GY-160*s,60*s,160*s,WOOD);
+      r(drawX+60*s,GY-200*s,60*s,40*s,WOOD_D);
+      r(drawX+70*s,GY-180*s,40*s,20*s,WOOD_DD);
+      r(drawX+20*s,GY-195*s,10*s,35*s,WOOD_DD);
+      r(drawX+150*s,GY-195*s,10*s,35*s,WOOD_DD);
+      r(drawX+85*s,GY-220*s,10*s,20*s,WOOD);
     }
     ctx.globalAlpha=1;
   });
@@ -314,47 +364,71 @@ function drawLayerFront(){
   layerFront.forEach(s=>{
     const parallax=camX*.95;
     const drawX=s.x-parallax;
-    if(drawX<-400||drawX>canvas.width+400)return;
+    if(drawX<-500||drawX>canvas.width+500)return;
     
     ctx.globalAlpha=0.25;
     
     if(s.type===0){
+      // Large ruined tower
       r(drawX,GY-s.h,s.w,s.h,'#000000');
-      r(drawX+s.w*.15,GY-s.h-50,s.w*.7,50,'#000000');
-      r(drawX+s.w*.3,GY-s.h-90,s.w*.4,40,'#000000');
-      r(drawX+s.w*.35,GY-s.h-130,s.w*.3,40,'#000000');
-      r(drawX+20,GY-s.h+25,15,50,'#000000');
-      r(drawX+s.w-35,GY-s.h+30,15,45,'#000000');
-      r(drawX+s.w*.25,GY-s.h-70,10,80,'#000000');
-      r(drawX+s.w*.65,GY-s.h-65,10,70,'#000000');
-      r(drawX+s.w*.45,GY-s.h-150,8,65,'#000000');
+      r(drawX+s.w*.15,GY-s.h-60,s.w*.7,60,'#000000');
+      r(drawX+s.w*.3,GY-s.h-110,s.w*.4,50,'#000000');
+      r(drawX+s.w*.35,GY-s.h-160,s.w*.3,50,'#000000');
+      r(drawX+25,GY-s.h+30,20,60,'#000000');
+      r(drawX+s.w-45,GY-s.h+35,20,55,'#000000');
+      r(drawX+s.w*.25,GY-s.h-85,12,95,'#000000');
+      r(drawX+s.w*.65,GY-s.h-80,12,85,'#000000');
+      r(drawX+s.w*.45,GY-s.h-180,10,80,'#000000');
     }else if(s.type===1){
-      r(drawX,GY-s.h*.7,s.w,s.h*.7,'#000000');
-      r(drawX+s.w*.1,GY-s.h*1.1,s.w*.35,s.h*.4,'#000000');
-      r(drawX+s.w*.55,GY-s.h*.95,s.w*.3,s.h*.3,'#000000');
-      r(drawX+s.w*.35,GY-s.h*.6,25,60,'#000000');
-      r(drawX+s.w*.7,GY-s.h*.5,20,55,'#000000');
-      r(drawX+s.w*.15,GY-s.h*.8,12,45,'#000000');
-      r(drawX+s.w*.5,GY-s.h*.85,10,40,'#000000');
-      r(drawX+s.w*.85,GY-s.h*.55,8,35,'#000000');
+      // Broken wall with arches
+      r(drawX,GY-s.h*.8,s.w,s.h*.8,'#000000');
+      r(drawX+s.w*.1,GY-s.h*1.3,s.w*.4,s.h*.5,'#000000');
+      r(drawX+s.w*.55,GY-s.h*1.15,s.w*.35,s.h*.35,'#000000');
+      r(drawX+s.w*.35,GY-s.h*.7,30,70,'#000000');
+      r(drawX+s.w*.7,GY-s.h*.6,25,65,'#000000');
+      r(drawX+s.w*.15,GY-s.h*.95,15,55,'#000000');
+      r(drawX+s.w*.5,GY-s.h*1,12,50,'#000000');
+      r(drawX+s.w*.85,GY-s.h*.65,10,45,'#000000');
     }else if(s.type===2){
-      r(drawX,GY-s.h*.6,s.w,s.h*.6,'#000000');
-      r(drawX+s.w*.2,GY-s.h*.8,s.w*.6,s.h*.25,'#000000');
-      r(drawX+s.w*.35,GY-s.h*1.05,s.w*.3,s.h*.25,'#000000');
-      for(let i=0;i<4;i++){
-        r(drawX+s.w*(.1+i*.3),GY-s.h*(.5+i*.1),12,55+i*15,'#000000');
-      }
-      r(drawX+s.w*.4,GY-s.h*.5,10,40,'#000000');
-      r(drawX+s.w*.6,GY-s.h*.65,8,45,'#000000');
-    }else{
-      r(drawX,GY-s.h*.5,s.w,s.h*.5,'#000000');
-      r(drawX+s.w*.1,GY-s.h*.7,s.w*.25,s.h*.25,'#000000');
-      r(drawX+s.w*.7,GY-s.h*.65,s.w*.25,s.h*.2,'#000000');
+      // Multiple pillars
+      r(drawX,GY-s.h*.7,s.w,s.h*.7,'#000000');
+      r(drawX+s.w*.2,GY-s.h*.95,s.w*.6,s.h*.3,'#000000');
+      r(drawX+s.w*.35,GY-s.h*1.25,s.w*.3,s.h*.3,'#000000');
       for(let i=0;i<5;i++){
-        r(drawX+s.w*(.05+i*.22),GY-s.h*(.35+i*.1),10,25+i*12,'#000000');
+        r(drawX+s.w*(.08+i*.25),GY-s.h*(.55+i*.12),15,65+i*18,'#000000');
       }
-      r(drawX+s.w*.3,GY-s.h*.6,8,35,'#000000');
-      r(drawX+s.w*.55,GY-s.h*.55,7,30,'#000000');
+      r(drawX+s.w*.4,GY-s.h*.55,12,50,'#000000');
+      r(drawX+s.w*.6,GY-s.h*.75,10,55,'#000000');
+    }else if(s.type===3){
+      // Collapsed structure
+      r(drawX,GY-s.h*.55,s.w,s.h*.55,'#000000');
+      r(drawX+s.w*.1,GY-s.h*.8,s.w*.3,s.h*.3,'#000000');
+      r(drawX+s.w*.7,GY-s.h*.75,s.w*.25,s.h*.25,'#000000');
+      for(let i=0;i<6;i++){
+        r(drawX+s.w*(.05+i*.18),GY-s.h*(.4+i*.08),12,30+i*14,'#000000');
+      }
+      r(drawX+s.w*.3,GY-s.h*.7,10,40,'#000000');
+      r(drawX+s.w*.55,GY-s.h*.65,8,35,'#000000');
+    }else if(s.type===4){
+      // Stone archway
+      r(drawX,GY-s.h*.9,s.w*.25,s.h*.9,'#000000');
+      r(drawX+s.w*.75,GY-s.h*.9,s.w*.25,s.h*.9,'#000000');
+      r(drawX+s.w*.25,GY-s.h*1.1,s.w*.5,s.h*.2,'#000000');
+      r(drawX+s.w*.3,GY-s.h*.95,s.w*.4,s.h*.15,'#000000');
+      r(drawX+s.w*.1,GY-s.h*1.05,12,45,'#000000');
+      r(drawX+s.w*.85,GY-s.h*1.05,12,45,'#000000');
+      r(drawX+s.w*.45,GY-s.h*1.2,10,30,'#000000');
+    }else{
+      // Ruined gate
+      r(drawX,GY-s.h*.85,s.w*.3,s.h*.85,'#000000');
+      r(drawX+s.w*.7,GY-s.h*.85,s.w*.3,s.h*.85,'#000000');
+      r(drawX+s.w*.3,GY-s.h*1.05,s.w*.4,s.h*.2,'#000000');
+      r(drawX+s.w*.35,GY-s.h*.9,s.w*.3,s.h*.15,'#000000');
+      r(drawX+s.w*.15,GY-s.h*1,15,50,'#000000');
+      r(drawX+s.w*.8,GY-s.h*1,15,50,'#000000');
+      r(drawX+s.w*.45,GY-s.h*1.15,10,25,'#000000');
+      r(drawX+s.w*.2,GY-s.h*.75,12,40,'#000000');
+      r(drawX+s.w*.75,GY-s.h*.75,12,40,'#000000');
     }
     ctx.globalAlpha=1;
   });
@@ -532,59 +606,67 @@ function drawSlide(e){
 
 function drawFlyer(e){
   const eX=e.x-camX;
-  if(eX<-120||eX>canvas.width+120)return;
+  if(eX<-150||eX>canvas.width+150)return;
   if(e.flash>0&&e.flash%2===0)return;
-  const bob=Math.sin(frame*.08+e.x*.03)*8;
-  const wingFlap=Math.sin(frame*.25+e.x*.1);
+  const bob=Math.sin(frame*.06+e.x*.025)*12;
+  const wingFlap=Math.sin(frame*.2+e.x*.08);
   
-  // Body
-  r(eX+e.w/2-8,e.y-20+bob,16,24,BAT);
-  r(eX+e.w/2-5,e.y-17+bob,10,18,BAT_D);
+  // Body (larger)
+  r(eX+e.w/2-12,e.y-30+bob,24,35,BAT);
+  r(eX+e.w/2-8,e.y-26+bob,16,28,BAT_D);
   
-  // Head
-  r(eX+e.w/2-10,e.y-32+bob,20,14,BAT);
-  r(eX+e.w/2-7,e.y-29+bob,14,10,BAT_D);
+  // Head (larger)
+  r(eX+e.w/2-15,e.y-50+bob,30,22,BAT);
+  r(eX+e.w/2-10,e.y-46+bob,20,16,BAT_D);
   
-  // Ears
-  r(eX+e.w/2-12,e.y-42+bob,6,12,BAT);
-  r(eX+e.w/2+6,e.y-42+bob,6,12,BAT);
-  r(eX+e.w/2-10,e.y-40+bob,3,8,BAT_D);
-  r(eX+e.w/2+7,e.y-40+bob,3,8,BAT_D);
+  // Ears (larger)
+  r(eX+e.w/2-18,e.y-65+bob,10,18,BAT);
+  r(eX+e.w/2+8,e.y-65+bob,10,18,BAT);
+  r(eX+e.w/2-15,e.y-62+bob,5,12,BAT_D);
+  r(eX+e.w/2+10,e.y-62+bob,5,12,BAT_D);
   
-  // Eyes (red glowing)
-  r(eX+e.w/2-6,e.y-28+bob,5,5,STONE_EYE);
-  r(eX+e.w/2+1,e.y-28+bob,5,5,STONE_EYE);
-  r(eX+e.w/2-5,e.y-27+bob,3,3,'#ff8866');
-  r(eX+e.w/2+2,e.y-27+bob,3,3,'#ff8866');
+  // Eyes (larger red glowing)
+  r(eX+e.w/2-10,e.y-46+bob,8,8,STONE_EYE);
+  r(eX+e.w/2+2,e.y-46+bob,8,8,STONE_EYE);
+  r(eX+e.w/2-8,e.y-44+bob,5,5,'#ff6644');
+  r(eX+e.w/2+4,e.y-44+bob,5,5,'#ff6644');
+  r(eX+e.w/2-6,e.y-42+bob,3,3,'#ffaa88');
+  r(eX+e.w/2+6,e.y-42+bob,3,3,'#ffaa88');
   
-  // Wings (animated)
-  const leftWingX=eX+e.w/2-35+wingFlap*15;
-  const rightWingX=eX+e.w/2+5-wingFlap*15;
-  const wingY=e.y-18+bob;
+  // Fangs
+  r(eX+e.w/2-4,e.y-32+bob,3,6,WHITE);
+  r(eX+e.w/2+1,e.y-32+bob,3,6,WHITE);
+  
+  // Wings (larger and more detailed)
+  const leftWingX=eX+e.w/2-55+wingFlap*25;
+  const rightWingX=eX+e.w/2+5-wingFlap*25;
+  const wingY=e.y-25+bob;
   
   // Left wing
   ctx.beginPath();
-  ctx.moveTo(eX+e.w/2-8,wingY+10);
-  ctx.lineTo(leftWingX,wingY-5+wingFlap*8);
-  ctx.lineTo(leftWingX+10,wingY+5);
-  ctx.lineTo(leftWingX+20,wingY+15);
-  ctx.lineTo(eX+e.w/2-8,wingY+20);
+  ctx.moveTo(eX+e.w/2-12,wingY+15);
+  ctx.lineTo(leftWingX,wingY-10+wingFlap*12);
+  ctx.lineTo(leftWingX+15,wingY);
+  ctx.lineTo(leftWingX+30,wingY+15);
+  ctx.lineTo(leftWingX+40,wingY+30);
+  ctx.lineTo(eX+e.w/2-12,wingY+35);
   ctx.fillStyle=BAT_WING;
   ctx.fill();
   
   // Right wing
   ctx.beginPath();
-  ctx.moveTo(eX+e.w/2+8,wingY+10);
-  ctx.lineTo(rightWingX+30,wingY-5+wingFlap*8);
-  ctx.lineTo(rightWingX+20,wingY+5);
-  ctx.lineTo(rightWingX+10,wingY+15);
-  ctx.lineTo(eX+e.w/2+8,wingY+20);
+  ctx.moveTo(eX+e.w/2+12,wingY+15);
+  ctx.lineTo(rightWingX+50,wingY-10+wingFlap*12);
+  ctx.lineTo(rightWingX+35,wingY);
+  ctx.lineTo(rightWingX+20,wingY+15);
+  ctx.lineTo(rightWingX+10,wingY+30);
+  ctx.lineTo(eX+e.w/2+12,wingY+35);
   ctx.fillStyle=BAT_WING;
   ctx.fill();
   
-  // Feet
-  r(eX+e.w/2-6,e.y+2+bob,4,6,BAT_D);
-  r(eX+e.w/2+2,e.y+2+bob,4,6,BAT_D);
+  // Feet (larger)
+  r(eX+e.w/2-10,e.y+3+bob,6,10,BAT_D);
+  r(eX+e.w/2+4,e.y+3+bob,6,10,BAT_D);
 }
 
 function drawPlayer(){
@@ -594,61 +676,71 @@ function drawPlayer(){
   if(P.duck){w=P.dw;h=P.dh;py=GY-h;}else{w=P.w;h=P.h;py=P.y-h;}
   const x=P.x-camX;
   const bounce=P.run&&!P.jmp?Math.sin(P.bf)*5:0;
+  const jumpStretch=P.jmp?1.1:1;
+  const jumpSquash=P.jmp?0.9:1;
   
   // Shadow
   r(x-5,GY-5,w+10,10,'rgba(0,0,0,0.3)');
   
-  // Robe (main body)
-  r(x,py-bounce,w,h,fl);
-  r(x+4,py+4-bounce,w-8,h-8,WIZARD_D);
+  // Cube body (slightly stretched when jumping)
+  const cubeW=w*jumpSquash;
+  const cubeH=h*jumpStretch;
+  const cubeX=x+(w-cubeW)/2;
+  r(cubeX,py-bounce,cubeW,cubeH,fl);
+  r(cubeX+4,py+4-bounce,cubeW-8,cubeH-8,WIZARD_D);
   
-  // Robe trim
-  r(x+2,py+h-12-bounce,w-4,4,WIZARD_L);
+  // Cube highlights
+  r(cubeX+6,py+6-bounce,15,15,WIZARD_L);
+  r(cubeX+cubeW-20,py+cubeH-20-bounce,15,15,WIZARD_L);
   
-  // Head (exposed face area)
-  r(x+(P.face>0?w-18:6),py+8-bounce,16,18,WIZARD_L);
+  // Face (simple cube face)
+  const faceX=P.face>0?cubeX+cubeW-20:cubeX+5;
+  r(faceX,py+15-bounce,15,15,WIZARD_L);
+  r(faceX+2,py+18-bounce,10,8,WHITE);
+  r(faceX+4,py+20-bounce,6,5,ORB);
   
-  // Eyes
-  r(x+(P.face>0?w-14:10),py+14-bounce,8,8,WHITE);
-  r(x+(P.face>0?w-12:12),py+16-bounce,5,5,ORB);
-  
-  // Wizard hat
-  const hatX=x+w/2-14;
-  r(hatX,py-25-bounce,28,30,WIZARD);
-  r(hatX+5,py-50-bounce,18,28,WIZARD);
-  r(hatX+9,py-68-bounce,10,20,WIZARD);
-  r(hatX+11,py-75-bounce,6,10,WIZARD_L);
+  // Wizard hat (pointed)
+  const hatX=x+w/2-16;
+  const hatBob=bounce*0.5;
+  r(hatX,py-20-hatBob,32,25,WIZARD);
+  r(hatX+6,py-45-hatBob,20,28,WIZARD);
+  r(hatX+10,py-65-hatBob,12,22,WIZARD);
+  r(hatX+13,py-75-hatBob,6,12,WIZARD_L);
   // Hat brim
-  r(hatX-5,py-2-bounce,38,6,WIZARD_D);
+  r(hatX-6,py-2-hatBob,44,8,WIZARD_D);
   // Star on hat
-  r(hatX+10,py-55-bounce,8,8,ORB_G);
-  r(hatX+12,py-53-bounce,4,4,ORB);
+  const starGlow=Math.sin(frame*.08)*.3+.7;
+  r(hatX+12,py-50-hatBob,10,10,ORB_G);
+  r(hatX+14,py-48-hatBob,6,6,ORB);
+  r(hatX+16,py-46-hatBob,3,3,WHITE);
   
-  // Staff (always visible)
-  const staffX=P.face>0?x+w+2:x-25;
-  r(staffX,py-60-bounce,8,110,STAFF);
-  r(staffX+1,py-58-bounce,6,106,STAFF_D);
-  // Staff orb
+  // Staff (always visible, bobbing with jump)
+  const staffX=P.face>0?x+w+3:x-28;
+  const staffBob=bounce*0.8;
+  r(staffX,py-55-staffBob,8,105,STAFF);
+  r(staffX+1,py-53-staffBob,6,101,STAFF_D);
+  // Staff orb (glowing)
   const orbGlow=Math.sin(frame*.1)*.3+.7;
   ctx.fillStyle=`rgba(170,136,255,${orbGlow})`;
   ctx.beginPath();
-  ctx.arc(staffX+4,py-65-bounce,12,0,Math.PI*2);
+  ctx.arc(staffX+4,py-62-staffBob,14,0,Math.PI*2);
   ctx.fill();
-  r(staffX-4,py-73-bounce,16,16,ORB);
-  r(staffX-2,py-71-bounce,12,12,ORB_G);
-  r(staffX,py-69-bounce,8,8,WHITE);
+  r(staffX-5,py-72-staffBob,18,18,ORB);
+  r(staffX-3,py-70-staffBob,14,14,ORB_G);
+  r(staffX-1,py-68-staffBob,10,10,WHITE);
   
-  // Legs (walking animation)
+  // Legs (cube feet, animated)
   if(!P.duck&&!P.jmp){
     const l=Math.floor(P.bf/3)%2;
-    r(x+8,py+h-bounce,12,l?22:10,WIZARD_D);
-    r(x+w-20,py+h-bounce,12,l?10:22,WIZARD_D);
-    r(x+6,py+h+(l?22:10)-bounce,16,6,STAFF_D);
-    r(x+w-22,py+h+(l?10:22)-bounce,16,6,STAFF_D);
+    r(cubeX+6,py+cubeH-bounce,14,l?18:8,WIZARD_D);
+    r(cubeX+cubeW-20,py+cubeH-bounce,14,l?8:18,WIZARD_D);
+    r(cubeX+4,py+cubeH+(l?18:8)-bounce,18,6,STAFF_D);
+    r(cubeX+cubeW-22,py+cubeH+(l?8:18)-bounce,18,6,STAFF_D);
   }
   if(P.jmp){
-    r(x+8,py+h,14,10,WIZARD_D);
-    r(x+w-22,py+h,14,10,WIZARD_D);
+    // Feet tucked when jumping
+    r(cubeX+6,py+cubeH-5,12,8,WIZARD_D);
+    r(cubeX+cubeW-18,py+cubeH-5,12,8,WIZARD_D);
   }
 }
 
@@ -810,8 +902,8 @@ function spawnSlide(){
 function spawnFlyer(){
   flyers.push({
     x:150+Math.random()*(RW-300),
-    y:GY-100-Math.random()*80,
-    w:70,h:50,hp:1,flash:0,
+    y:GY-120-Math.random()*80,
+    w:100,h:70,hp:1,flash:0,
     vx:(Math.random()<.5?1:-1)*(0.35+Math.random()*0.25),
     vy:(Math.random()<.5?1:-1)*.12
   });
